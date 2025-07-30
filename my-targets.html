@@ -175,48 +175,55 @@
        </footer>
    </div>
    <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const goalContainer = document.getElementById("goalList");
-  const stored = JSON.parse(localStorage.getItem("healthGoals")) || [];
+  document.addEventListener("DOMContentLoaded", async function () {
+    const userId = localStorage.getItem("userId");
+    const goalList = document.getElementById("goalList");
 
-  if (!Array.isArray(stored) || stored.length === 0) {
-    goalContainer.innerHTML = `<div class="alert alert-light text-center">No goals found</div>`;
-    return;
-  }
+    if (!userId) {
+      goalList.innerHTML = "<p class='text-danger'>User not logged in.</p>";
+      return;
+    }
 
-  stored.forEach((goal, index) => {
-    const metric = goal.metricType || "Unknown Metric";
-    const value = goal.value ?? "No Value";
-    const comparison = goal.comparison ?? "-";
-    const targetDate = goal.targetDate ?? "-";
-    const note = goal.notes ?? "";
+    
+  console.log("Fetching goals for userId:", userId);
 
-    const card = document.createElement("div");
-    card.className = "card mb-3";
-    card.innerHTML = `
-      <div class="card-body">
-        <h5 class="card-title text-capitalize">${metric}</h5>
-        <p class="card-text"><strong>Target:</strong> ${value}</p>
-        <p class="card-text"><strong>Comparison:</strong> ${comparison}</p>
-        <p class="card-text"><strong>Target Date:</strong> ${targetDate}</p>
-        ${note ? `<p class="card-text"><strong>Note:</strong> ${note}</p>` : ""}
-        <button class="btn btn-danger btn-sm" onclick="deleteGoal(${index})">
-          <i class="fas fa-trash-alt me-1"></i> Delete
-        </button>
-      </div>
-    `;
-    goalContainer.appendChild(card);
+  
+    try {
+      const response = await fetch(`http://localhost:8286/api/targets/user/${userId}`);
+      if (!response.ok) throw new Error("Failed to fetch goals");
+
+      const targets = await response.json();
+
+      if (targets.length === 0) {
+        goalList.innerHTML = "<p class='text-muted'>You have no targets set.</p>";
+        return;
+      }
+
+      // Render each target as a card
+      targets.forEach(target => {
+        const card = document.createElement("div");
+        card.className = "card mb-3";
+
+        card.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">${target.title || "Untitled Goal"}</h5>
+            <p class="card-text">
+              <strong>Status:</strong> ${target.status} <br>
+              <strong>Start Date:</strong> ${target.startDate} <br>
+              <strong>End Date:</strong> ${target.endDate}
+            </p>
+          </div>
+        `;
+
+        goalList.appendChild(card);
+      });
+    } catch (error) {
+      console.error(error);
+      goalList.innerHTML = "<p class='text-danger'>❌ Failed to load goals. Please try again later.</p>";
+    }
   });
-});
-
-function deleteGoal(index) {
-  const stored = JSON.parse(localStorage.getItem("healthGoals")) || [];
-  stored.splice(index, 1);
-  localStorage.setItem("healthGoals", JSON.stringify(stored));
-  location.reload();
-}
-
 </script>
+
 
 
    <script src="js/main-script.js"></script>

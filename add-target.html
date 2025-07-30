@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Personal Health Tracker - Set Goal</title>
-   <link rel="stylesheet" href="css/main-styles.css">
-   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-   <!-- Bootstrap 5 CSS -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Health Tracker - Set Goal</title>
+    <link rel="stylesheet" href="css/main-styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap 5 CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-</head>
-<body>
-   <div class="app-container">
-       <!-- Top Header with Contact Info -->
-       <div class="top-header">
-           <div class="contact-info">
-               <span class="phone">0987654321</span>
-               <span class="email">user@example.com</span>
-           </div>
-       </div>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Top Header with Contact Info -->
+      <div class="top-header">
+        <div class="contact-info">
+          <span class="phone">0987654321</span>
+          <span class="email">user@example.com</span>
+        </div>
+      </div>
 
-       <!-- Main Header -->
-       <nav class="navbar navbar-expand-lg main-header">
+      <!-- Main Header -->
+      <nav class="navbar navbar-expand-lg main-header">
         <div class="container-fluid header-content">
           <!-- Logo -->
           <a class="navbar-brand logo-placeholder" href="#">
@@ -56,8 +59,6 @@
                   >Progress Records</a
                 >
               </li>
-
-
 
               <li class="nav-item dropdown">
                 <a
@@ -117,224 +118,161 @@
         </div>
       </nav>
 
-       <!-- Hero Section -->
-       <section class="hero-section">
-           <div class="hero-content">
-               <div class="hero-graphics">
-                   <div class="hero-shape-1"></div>
-                   <div class="hero-shape-2"></div>
-               </div>
-               <div class="hero-text">
-                   <h1>Set Your Health Goals</h1>
-                   <p>Define your targets for a healthier you</p>
-               </div>
-           </div>
-       </section>
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <div class="hero-graphics">
+            <div class="hero-shape-1"></div>
+            <div class="hero-shape-2"></div>
+          </div>
+          <div class="hero-text">
+            <h1>Set Your Health Goals</h1>
+            <p>Define your targets for a healthier you</p>
+          </div>
+        </div>
+      </section>
 
-       <!-- Main Content -->
-       <main class="main-content">
-           <!-- Goals View (for setting goals) -->
-           <div id="add-goal-view" class="content-view active">
-               <div class="form-container">
-                   <h2>Set New Health Goal</h2>
-                   <form id="goalForm">
-                       <div class="form-group">
-                           <label for="goalMetricType">Indicator (Metric Type)</label>
-                           <select id="goalMetricType" required>
-                               <option value="">Select metric type</option>
-                               <option value="weight">Weight</option>
-                               <option value="height">Height</option>
-                               <option value="steps">Steps</option>
-                               <option value="heartRate">Heart Rate</option>
-                               <option value="bloodPressure">Blood Pressure</option>
-                               <option value="bloodSugar">Blood Sugar</option>
-                               <option value="temperature">Body Temperature</option>
-                               <option value="sleep">Sleep Hours</option>
-                           </select>
-                       </div>
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Goals View (for setting goals) -->
+        <div id="add-goal-view" class="content-view active">
+          <div class="form-container">
+            <h2>Set New Health Goal</h2>
+            <form id="goalForm">
+              <div class="form-group">
+                <label for="goalMetricType">Indicator (Metric Type)</label>
+                <select id="goalMetricType" required>
+                  <option value="">Loading metric types...</option>
+                </select>
+              </div>
 
-                       <div class="form-group" id="goalValueGroup">
-                           <label for="goalValue">Target Value</label>
-                           <input type="number" id="goalValue" step="0.1" required>
-                           <small class="form-text text-muted" id="goalUnitDisplay"></small>
-                       </div>
+              <div class="form-group" id="goalValueGroup">
+                <label for="goalValue">Target Value</label>
+                <input type="number" id="goalValue" step="0.1" required />
+                <small
+                  class="form-text text-muted"
+                  id="goalUnitDisplay"
+                ></small>
+              </div>
 
-                       <div class="form-group" id="goalBloodPressureGroup" style="display: none;">
-                           <label for="goalSystolic">Target Systolic</label>
-                           <input type="number" id="goalSystolic" min="70" max="200">
-                           <label for="goalDiastolic">Target Diastolic</label>
-                           <input type="number" id="goalDiastolic" min="40" max="120">
-                           <small class="form-text text-muted">mmHg</small>
-                       </div>
+              <div
+                class="form-group"
+                id="goalBloodPressureGroup"
+                style="display: none"
+              >
+                <label for="goalSystolic">Target Systolic</label>
+                <input type="number" id="goalSystolic" min="70" max="200" />
+                <label for="goalDiastolic">Target Diastolic</label>
+                <input type="number" id="goalDiastolic" min="40" max="120" />
+                <small class="form-text text-muted">mmHg</small>
+              </div>
 
-                       <div class="form-group">
-                           <label for="comparisonType">Comparison Type</label>
-                           <select id="comparisonType" required>
-                               <option value="lessThan">Less Than (<)</option>
-                               <option value="greaterThan">Greater Than (>)</option>
-                               <option value="equalTo">Equal To (=)</option>
-                               <option value="range">Within Range</option>
-                           </select>
-                       </div>
+              <div class="form-group">
+                <label for="comparisonType">Comparison Type</label>
+                <select id="comparisonType" required>
+                  <option value="lessThan">Less Than (<)</option>
+                  <option value="greaterThan">Greater Than (>)</option>
+                  <option value="equalTo">Equal To (=)</option>
+                  <option value="range">Within Range</option>
+                </select>
+              </div>
 
-                       <div class="form-group" id="rangeMinMaxGroup" style="display: none;">
-                           <label for="rangeMin">Min Value</label>
-                           <input type="number" id="rangeMin" step="0.1">
-                           <label for="rangeMax">Max Value</label>
-                           <input type="number" id="rangeMax" step="0.1">
-                       </div>
+              <div
+                class="form-group"
+                id="rangeMinMaxGroup"
+                style="display: none"
+              >
+                <label for="rangeMin">Min Value</label>
+                <input type="number" id="rangeMin" step="0.1" />
+                <label for="rangeMax">Max Value</label>
+                <input type="number" id="rangeMax" step="0.1" />
+              </div>
 
-                       <div class="form-group">
-                           <label for="statisticsType">Statistics Type</label>
-                           <select id="statisticsType" required>
-                               <option value="latest">Latest Reading</option>
-                               <option value="average">Average of Readings</option>
-                           </select>
-                       </div>
+              <div class="form-group">
+                <label for="statisticsType">Statistics Type</label>
+                <select id="statisticsType" required>
+                  <option value="latest">Latest Reading</option>
+                  <option value="average">Average of Readings</option>
+                </select>
+              </div>
 
-                       <div class="form-group">
-                           <label for="targetDate">Target Date</label>
-                           <input type="date" id="targetDate" required>
-                       </div>
+              <div class="form-group">
+                <label for="targetDate">Target Date</label>
+                <input type="date" id="targetDate" required />
+              </div>
 
-                       <div class="form-group">
-                           <label for="goalNotes">Notes (Optional)</label>
-                           <textarea id="goalNotes" rows="3" placeholder="Any additional notes about this goal..."></textarea>
-                       </div>
+              <div class="form-group">
+                <label for="goalNotes">Notes (Optional)</label>
+                <textarea
+                  id="goalNotes"
+                  rows="3"
+                  placeholder="Any additional notes about this goal..."
+                ></textarea>
+              </div>
 
-                       <div class="form-actions">
-                           <button type="button" class="btn-secondary" onclick="window.location.href='view-targets.html'">Cancel</button>
-                           <button type="submit" class="btn-primary">Set Goal</button>
-                       </div>
-                   </form>
-               </div>
-           </div>
-       </main>
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  onclick="window.location.href='main-page.html'"
+                >
+                  Cancel
+                </button>
+                <button type="submit" class="btn-primary">Set Goal</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
 
-       <!-- Footer with Action Buttons -->
-       <footer class="bg-light border-top mt-5 py-4">
-         <div class="container">
-           <div class="row align-items-center">
-             <div class="col-md-6">
-               <p class="mb-0 text-muted">&copy; 2025 Health Tracker App. All rights reserved.</p>
-               <p class="mb-0">
-                 <a href="#" class="text-primary text-decoration-none me-3">Privacy Policy</a>
-                 <a href="#" class="text-primary text-decoration-none">Terms of Service</a>
-               </p>
-             </div>
-             <div class="col-md-6 text-md-end mt-3 mt-md-0">
-               <div class="btn-group" role="group">
-                 <button class="btn btn-outline-primary" onclick="generateReport()" title="Generate comprehensive health report">
-                   <i class="fas fa-file-alt me-2"></i>Generate Report
-                 </button>
-                 <button class="btn btn-outline-success" onclick="exportData()" title="Export all health data as JSON">
-                   <i class="fas fa-download me-2"></i>Export Data
-                 </button>
-                 <button class="btn btn-outline-danger" onclick="resetAllData()" title="Reset all data and generate new demo data">
-                   <i class="fas fa-refresh me-2"></i>Reset Data
-                 </button>
-               </div>
-             </div>
-           </div>
-         </div>
-       </footer>
-   </div>
-   <script>
-function setGoal(type) {
-    let goals = JSON.parse(localStorage.getItem("healthGoals")) || {};
+      <!-- Footer with Action Buttons -->
+      <footer class="bg-light border-top mt-5 py-4">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <p class="mb-0 text-muted">
+                &copy; 2025 Health Tracker App. All rights reserved.
+              </p>
+              <p class="mb-0">
+                <a href="#" class="text-primary text-decoration-none me-3"
+                  >Privacy Policy</a
+                >
+                <a href="#" class="text-primary text-decoration-none"
+                  >Terms of Service</a
+                >
+              </p>
+            </div>
+            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+              <div class="btn-group" role="group">
+                <button
+                  class="btn btn-outline-primary"
+                  onclick="generateReport()"
+                  title="Generate comprehensive health report"
+                >
+                  <i class="fas fa-file-alt me-2"></i>Generate Report
+                </button>
+                <button
+                  class="btn btn-outline-success"
+                  onclick="exportData()"
+                  title="Export all health data as JSON"
+                >
+                  <i class="fas fa-download me-2"></i>Export Data
+                </button>
+                <button
+                  class="btn btn-outline-danger"
+                  onclick="resetAllData()"
+                  title="Reset all data and generate new demo data"
+                >
+                  <i class="fas fa-refresh me-2"></i>Reset Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script src="js/add-target.js"></script>
 
-    if (type === 'weight') {
-        const weight = parseFloat(document.getElementById("weightGoal").value);
-        if (!isNaN(weight)) {
-            goals.weight = { type: "Weight", value: weight + " kg" };
-            document.getElementById("weightGoalStatus").innerText = "Goal set!";
-        }
-    } else if (type === 'heartRate') {
-        const heartRate = parseInt(document.getElementById("heartRateGoal").value);
-        if (!isNaN(heartRate)) {
-            goals.heartRate = { type: "Heart Rate", value: heartRate + " bpm" };
-            document.getElementById("heartRateGoalStatus").innerText = "Goal set!";
-        }
-    } else if (type === 'bloodPressure') {
-        const systolic = parseInt(document.getElementById("systolicGoal").value);
-        const diastolic = parseInt(document.getElementById("diastolicGoal").value);
-        if (!isNaN(systolic) && !isNaN(diastolic)) {
-            goals.bloodPressure = { type: "Blood Pressure", value: systolic + "/" + diastolic + " mmHg" };
-            document.getElementById("bloodPressureGoalStatus").innerText = "Goal set!";
-        }
-    } else if (type === 'sleep') {
-        const sleep = parseFloat(document.getElementById("sleepGoal").value);
-        if (!isNaN(sleep)) {
-            goals.sleep = { type: "Sleep", value: sleep + " hours" };
-            document.getElementById("sleepGoalStatus").innerText = "Goal set!";
-        }
-    }
-
-    localStorage.setItem("healthGoals", JSON.stringify(goals));
-}
-</script>
-
-   <script src="js/main-script.js"></script>
-   <script>
-    const goalForm = document.getElementById("goalForm");
-
-goalForm.addEventListener("submit", function (event) {
-  event.preventDefault();
-
-  const metricType = document.getElementById("goalMetricType").value;
-  const comparison = document.getElementById("comparisonType").value;
-  const stats = document.getElementById("statisticsType").value;
-  const targetDate = document.getElementById("targetDate").value;
-  const notes = document.getElementById("goalNotes").value;
-
-  let target = {
-    metricType,
-    comparison,
-    stats,
-    targetDate,
-    notes,
-    createdAt: new Date().toISOString()
-  };
-
-  if (metricType === "bloodPressure") {
-    const sys = parseInt(document.getElementById("goalSystolic").value);
-    const dia = parseInt(document.getElementById("goalDiastolic").value);
-    if (!isNaN(sys) && !isNaN(dia)) {
-      target.value = `${sys}/${dia}`;
-    }
-  } else if (comparison === "range") {
-    const min = parseFloat(document.getElementById("rangeMin").value);
-    const max = parseFloat(document.getElementById("rangeMax").value);
-    if (!isNaN(min) && !isNaN(max)) {
-      target.value = `${min} - ${max}`;
-    }
-  } else {
-    const value = parseFloat(document.getElementById("goalValue").value);
-    if (!isNaN(value)) {
-      target.value = value;
-    }
-  }
-
-  // Load and validate existing data
-  let existing = [];
-  try {
-    const stored = JSON.parse(localStorage.getItem("healthGoals"));
-    if (Array.isArray(stored)) {
-      existing = stored;
-    }
-  } catch (e) {
-    console.warn("Corrupt localStorage data for healthGoals, resetting...");
-  }
-
-  // Save
-  existing.push(target);
-  localStorage.setItem("healthGoals", JSON.stringify(existing));
-
-  alert("🎯 Goal saved successfully!");
-  goalForm.reset();
-});
-
-   </script>
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

@@ -49,8 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Lưu trạng thái đăng nhập và vai trò/tên người dùng
                 localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('currentUser', loginResponse.user.username); // Lưu username từ phản hồi
+                localStorage.setItem('current-user-name', loginResponse.user.username); // Lưu username từ phản hồi
                 localStorage.setItem('userRole', loginResponse.user.role); // Lưu vai trò của người dùng
+                localStorage.setItem("userId", loginResponse.user.userId); // lưu id người dùng
 
                 alert(loginResponse.message || 'Đăng nhập thành công!');
 

@@ -65,7 +65,6 @@
                 >
               </li>
 
-
               <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle dropdown-btn"
@@ -141,7 +140,10 @@
                   </li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <a class="dropdown-item" href="login.html" onclick="logoutUser()"
+                    <a
+                      class="dropdown-item"
+                      href="login.html"
+                      onclick="logoutUser()"
                       >Logout</a
                     >
                   </li>
@@ -172,114 +174,20 @@
         <div id="dashboard-view" class="content-view active">
           <section class="metrics-section">
             <h2 class="section-title">My metrics</h2>
-            <div class="metrics-grid">
-              <div class="metric-card" data-metric="weight">
-                <div class="metric-icon">
-                  <i class="fas fa-weight-scale"></i>
-                </div>
-                <div class="metric-info">
-                  <h3>Weight</h3>
-                  <div class="metric-value" id="weightValue">-- kg</div>
-                  <div class="metric-details">
-                    <span class="last-updated" id="weightDate">No data</span>
-                    <span class="metric-trend" id="weightTrend"></span>
-                  </div>
-                </div>
-                <div class="metric-chart">
-                  <canvas id="weightMiniChart"></canvas>
-                </div>
-              </div>
 
-              <div class="metric-card" data-metric="height">
-                <div class="metric-icon">
-                  <i class="fas fa-ruler-vertical"></i>
-                </div>
-                <div class="metric-info">
-                  <h3>Height</h3>
-                  <div class="metric-value" id="heightValue">-- cm</div>
-                  <div class="metric-details">
-                    <span class="last-updated" id="heightDate">No data</span>
-                    <span class="metric-trend" id="heightTrend"></span>
-                  </div>
-                </div>
-                <div class="metric-chart">
-                  <canvas id="heightMiniChart"></canvas>
-                </div>
-              </div>
-
-              <div class="metric-card" data-metric="steps">
-                <div class="metric-icon">
-                  <i class="fas fa-shoe-prints"></i>
-                </div>
-                <div class="metric-info">
-                  <h3>Steps</h3>
-                  <div class="metric-value" id="stepsValue">-- steps</div>
-                  <div class="metric-details">
-                    <span class="last-updated" id="stepsDate">No data</span>
-                    <span class="metric-trend" id="stepsTrend"></span>
-                  </div>
-                </div>
-                <div class="metric-chart">
-                  <canvas id="stepsMiniChart"></canvas>
-                </div>
-              </div>
-
-              <div class="metric-card" data-metric="heartRate">
-                <div class="metric-icon">
-                  <i class="fas fa-heartbeat"></i>
-                </div>
-                <div class="metric-info">
-                  <h3>Heart Rate</h3>
-                  <div class="metric-value" id="heartRateValue">-- bpm</div>
-                  <div class="metric-details">
-                    <span class="last-updated" id="heartRateDate">No data</span>
-                    <span class="metric-trend" id="heartRateTrend"></span>
-                  </div>
-                </div>
-                <div class="metric-chart">
-                  <canvas id="heartRateMiniChart"></canvas>
-                </div>
-              </div>
-
-              <div class="metric-card" data-metric="bloodPressure">
-                <div class="metric-icon">
-                  <i class="fas fa-heart-pulse"></i>
-                </div>
-                <div class="metric-info">
-                  <h3>Blood Pressure</h3>
-                  <div class="metric-value" id="bloodPressureValue">
-                    --/-- mmHg
-                  </div>
-                  <div class="metric-details">
-                    <span class="last-updated" id="bloodPressureDate"
-                      >No data</span
-                    >
-                    <span class="metric-trend" id="bloodPressureTrend"></span>
-                  </div>
-                </div>
-                <div class="metric-chart">
-                  <canvas id="bloodPressureMiniChart"></canvas>
-                </div>
-              </div>
-
-              <div class="metric-card" data-metric="bloodSugar">
-                <div class="metric-icon">
-                  <i class="fas fa-tint"></i>
-                </div>
-                <div class="metric-info">
-                  <h3>Blood Sugar</h3>
-                  <div class="metric-value" id="bloodSugarValue">-- mg/dL</div>
-                  <div class="metric-details">
-                    <span class="last-updated" id="bloodSugarDate"
-                      >No data</span
-                    >
-                    <span class="metric-trend" id="bloodSugarTrend"></span>
-                  </div>
-                </div>
-                <div class="metric-chart">
-                  <canvas id="bloodSugarMiniChart"></canvas>
-                </div>
-              </div>
+            <div class="metrics-grid" id="metricsContainer">
+              <!-- JS sẽ render các metric-card vào đây -->
+            </div>
+            <div
+              id="noDataMessage"
+              style="
+                display: none;
+                text-align: center;
+                color: gray;
+                margin-top: 1rem;
+              "
+            >
+              No data available.
             </div>
           </section>
 
@@ -490,5 +398,74 @@
     <script src="js/auth.js"></script>
     <!-- Bootstrap JS (gồm Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("metricsContainer");
+    const noDataMessage = document.getElementById("noDataMessage");
+
+    fetch("http://127.0.0.1:8286/api/healthrecords")
+      .then((res) => res.json())
+      .then((records) => {
+        container.innerHTML = "";
+
+        if (!records || records.length === 0) {
+          noDataMessage.style.display = "block";
+          return;
+        }
+
+        noDataMessage.style.display = "none";
+
+        records.forEach((record) => {
+          const name = record.metricName || "Unknown";
+          const value = record.value ?? "No data";
+          const unit = record.unit || "";
+          const date = record.logDate || "No date";
+
+          // Optional: bạn có thể tự tính trend nếu muốn
+          const trendSymbol = "-";
+          const trendColor = "gray";
+
+          const iconMap = {
+            "Weight": "fa-weight-scale",
+            "Height": "fa-ruler-vertical",
+            "Steps": "fa-shoe-prints",
+            "Heart Rate": "fa-heartbeat",
+            "Blood Pressure": "fa-heart-pulse",
+            "Blood Sugar": "fa-tint",
+            "Sleep": "fa-bed"
+          };
+          const iconClass = iconMap[name] || "fa-question-circle";
+
+          const card = document.createElement("div");
+          card.className = "metric-card";
+          card.innerHTML = `
+            <div class="metric-icon">
+              <i class="fas ${iconClass}"></i>
+            </div>
+            <div class="metric-info">
+              <h3>${name}</h3>
+              <div class="metric-value">${value} ${unit}</div>
+              <div class="metric-details">
+                <span class="last-updated">${date}</span>
+                <span class="metric-trend" style="color: ${trendColor}">${trendSymbol}</span>
+              </div>
+            </div>
+            <div class="metric-chart">
+              <canvas id="${name.replace(/\s+/g, '')}MiniChart"></canvas>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        container.innerHTML = "";
+        noDataMessage.style.display = "block";
+      });
+  });
+</script>
+
+
+
   </body>
 </html>

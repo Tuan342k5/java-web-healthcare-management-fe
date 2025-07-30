@@ -1,290 +1,291 @@
-/**
- * Personal Health Tracker - Main JavaScript File
- * Bootstrap 5 Enhanced Version
- * This file contains all the functionality for the health tracking application
- * including data management, chart rendering, and user interactions
- */
+// /**
+//  * Personal Health Tracker - Main JavaScript File
+//  * Bootstrap 5 Enhanced Version
+//  * This file contains all the functionality for the health tracking application
+//  * including data management, chart rendering, and user interactions
+//  */
 
 
-// ============================================================================
-// GLOBAL VARIABLES AND CONFIGURATION
-// ============================================================================
+// // ============================================================================
+// // GLOBAL VARIABLES AND CONFIGURATION
+// // ============================================================================
 
-/**
- * Main health data array - stores all user health metrics
- * Each entry contains: id, type, value, date, time, notes, timestamp
- */
-let healthData = JSON.parse(localStorage.getItem("healthData")) || []
+// /**
+//  * Main health data array - stores all user health metrics
+//  * Each entry contains: id, type, value, date, time, notes, timestamp
+//  */
+// let healthData = JSON.parse(localStorage.getItem("healthData")) || []
 
-/**
- * User goals object - stores target values for different health metrics
- */
-let goals = JSON.parse(localStorage.getItem("healthGoals")) || {}
+// /**
+//  * User goals object - stores target values for different health metrics
+//  */
+// let goals = JSON.parse(localStorage.getItem("healthGoals")) || {}
 
-/**
- * Chart instances for main dashboard charts
- */
-let weightChart, heartRateChart
+// /**
+//  * Chart instances for main dashboard charts
+//  */
+// let weightChart, heartRateChart
 
-/**
- * Mini chart instances for metric cards
- */
-const miniCharts = {}
+// /**
+//  * Mini chart instances for metric cards
+//  */
+// const miniCharts = {}
 
-/**
- * Chart type toggle - determines whether to show line or bar charts
- */
-const currentChartType = "line"
+// /**
+//  * Chart type toggle - determines whether to show line or bar charts
+//  */
+// const currentChartType = "line"
 
-/**
- * Available health metric types and their configurations
- */
-const METRIC_TYPES = {
-  weight: {
-    name: "Weight",
-    unit: "kg",
-    icon: "fas fa-weight-scale", // Updated icon
-    color: "#3498db",
-    normalRange: { min: 50, max: 100 },
-  },
-  height: {
-    name: "Height",
-    unit: "cm",
-    icon: "fas fa-ruler-vertical", // Updated icon
-    color: "#2ecc71",
-    normalRange: { min: 150, max: 200 },
-  },
-  heartRate: {
-    name: "Heart Rate",
-    unit: "bpm",
-    icon: "fas fa-heartbeat", // Kept same
-    color: "#e74c3c",
-    normalRange: { min: 60, max: 100 },
-  },
-  bloodPressure: {
-    name: "Blood Pressure",
-    unit: "mmHg",
-    icon: "fas fa-heart-pulse", // Updated icon
-    color: "#f39c12",
-    normalRange: { systolic: { min: 90, max: 140 }, diastolic: { min: 60, max: 90 } },
-  },
-  bloodSugar: {
-    name: "Blood Sugar",
-    unit: "mg/dL",
-    icon: "fas fa-tint", // Kept same
-    color: "#9b59b6",
-    normalRange: { min: 70, max: 140 },
-  },
-  steps: {
-    name: "Steps",
-    unit: "steps",
-    icon: "fas fa-shoe-prints", // Updated icon
-    color: "#1abc9c",
-    normalRange: { min: 5000, max: 15000 },
-  },
-  // Removed temperature and sleep from METRIC_TYPES if not used on dashboard
-  // temperature: {
-  //   name: "Body Temperature",
-  //   unit: "°C",
-  //   icon: "fas fa-thermometer-half",
-  //   color: "#e67e22",
-  //   normalRange: { min: 36, max: 37.5 },
-  // },
-  // sleep: {
-  //   name: "Sleep Hours",
-  //   unit: "hours",
-  //   icon: "fas fa-bed",
-  //   color: "#34495e",
-  //   normalRange: { min: 6, max: 9 },
-  // },
-}
+// /**
+//  * Available health metric types and their configurations
+//  */
+// const METRIC_TYPES = {
+//   weight: {
+//     name: "Weight",
+//     unit: "kg",
+//     icon: "fas fa-weight-scale", // Updated icon
+//     color: "#3498db",
+//     normalRange: { min: 50, max: 100 },
+//   },
+//   height: {
+//     name: "Height",
+//     unit: "cm",
+//     icon: "fas fa-ruler-vertical", // Updated icon
+//     color: "#2ecc71",
+//     normalRange: { min: 150, max: 200 },
+//   },
+//   heartRate: {
+//     name: "Heart Rate",
+//     unit: "bpm",
+//     icon: "fas fa-heartbeat", // Kept same
+//     color: "#e74c3c",
+//     normalRange: { min: 60, max: 100 },
+//   },
+//   bloodPressure: {
+//     name: "Blood Pressure",
+//     unit: "mmHg",
+//     icon: "fas fa-heart-pulse", // Updated icon
+//     color: "#f39c12",
+//     normalRange: { systolic: { min: 90, max: 140 }, diastolic: { min: 60, max: 90 } },
+//   },
+//   bloodSugar: {
+//     name: "Blood Sugar",
+//     unit: "mg/dL",
+//     icon: "fas fa-tint", // Kept same
+//     color: "#9b59b6",
+//     normalRange: { min: 70, max: 140 },
+//   },
+//   steps: {
+//     name: "Steps",
+//     unit: "steps",
+//     icon: "fas fa-shoe-prints", // Updated icon
+//     color: "#1abc9c",
+//     normalRange: { min: 5000, max: 15000 },
+//   },
+//   // Removed temperature and sleep from METRIC_TYPES if not used on dashboard
+//   // temperature: {
+//   //   name: "Body Temperature",
+//   //   unit: "°C",
+//   //   icon: "fas fa-thermometer-half",
+//   //   color: "#e67e22",
+//   //   normalRange: { min: 36, max: 37.5 },
+//   // },
+//   // sleep: {
+//   //   name: "Sleep Hours",
+//   //   unit: "hours",
+//   //   icon: "fas fa-bed",
+//   //   color: "#34495e",
+//   //   normalRange: { min: 6, max: 9 },
+//   // },
+// }
 
-// ============================================================================
-// APPLICATION INITIALIZATION
-// ============================================================================
+// // ============================================================================
+// // APPLICATION INITIALIZATION
+// // ============================================================================
 
-/**
- * Initialize the application when DOM is loaded
- * Sets up event listeners, loads data, and renders initial views
- */
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("🚀 Initializing Personal Health Tracker...")
+// /**
+//  * Initialize the application when DOM is loaded
+//  * Sets up event listeners, loads data, and renders initial views
+//  */
+// document.addEventListener("DOMContentLoaded", () => {
+//   console.log("🚀 Initializing Personal Health Tracker...")
 
-  // Initialize mock data if no existing data
-  if (healthData.length === 0) {
-    initializeMockData()
-  }
+//   // Initialize mock data if no existing data
+//   if (healthData.length === 0) {
+//     initializeMockData()
+//   }
 
-  // Setup application based on current page
-  initializeApp()
+//   // Setup application based on current page
+//   initializeApp()
 
-  console.log("✅ Application initialized successfully")
-})
+//   console.log("✅ Application initialized successfully")
+// })
 
-/**
- * Main application initialization function
- * Coordinates all setup tasks based on the current page
- */
-function initializeApp() {
-  setupEventListeners()
-  initializeBootstrapComponents()
-  setDefaultFormValues() // Always set default form values if form elements exist
+// /**
+//  * Main application initialization function
+//  * Coordinates all setup tasks based on the current page
+//  */
+// function initializeApp() {
+//   setupEventListeners()
+//   initializeBootstrapComponents()
+//   setDefaultFormValues() // Always set default form values if form elements exist
 
-  const path = window.location.pathname
+//   const path = window.location.pathname
 
-  if (path.includes("main-page.html") || path === "/") {
-    updateDashboard()
-    initializeMiniCharts()
-  } else if (path.includes("add-dailylog.html")) {
-    // Specific setup for add-daily-log page
-    // setDefaultFormValues() is already called above
-  } else if (path.includes("my-dailylogs.html")) {
-    updateHistory()
-  } else if (path.includes("add-target.html")) {
-    updateGoals() // Show current goals while setting new ones
-  } else if (path.includes("my-targets.html")) {
-    updateGoals()
-  }
-}
+//   if (path.includes("main-page.html") || path === "/") {
+//     updateDashboard()
+//     initializeMiniCharts()
+//   }
+//   //  else if (path.includes("add-dailylog.html")) {
+//   //   // Specific setup for add-daily-log page
+//   //   // setDefaultFormValues() is already called above
+//   // } else if (path.includes("my-dailylogs.html")) {
+//   //   updateHistory()
+//   // } else if (path.includes("add-target.html")) {
+//   //   updateGoals() // Show current goals while setting new ones
+//   // } else if (path.includes("my-targets.html")) {
+//   //   updateGoals()
+//   // }
+// }
 
-/**
- * Initialize Bootstrap components
- */
-function initializeBootstrapComponents() {
-  // Initialize tooltips
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl))
+// /**
+//  * Initialize Bootstrap components
+//  */
+// function initializeBootstrapComponents() {
+//   // Initialize tooltips
+//   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+//   tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl))
 
-  // Initialize popovers
-  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-  popoverTriggerList.map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl))
-}
+//   // Initialize popovers
+//   const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+//   popoverTriggerList.map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl))
+// }
 
-/**
- * Generate comprehensive mock data for demonstration
- * Creates realistic health data spanning the last 30 days
- */
-function initializeMockData() {
-  console.log(" Generating mock health data...")
+// /**
+//  * Generate comprehensive mock data for demonstration
+//  * Creates realistic health data spanning the last 30 days
+//  */
+// function initializeMockData() {
+//   console.log(" Generating mock health data...")
 
-  const mockData = []
-  const now = new Date()
+//   const mockData = []
+//   const now = new Date()
 
-  // Generate data for the last 30 days
-  for (let i = 30; i >= 0; i--) {
-    const date = new Date(now)
-    date.setDate(date.getDate() - i)
+//   // Generate data for the last 30 days
+//   for (let i = 30; i >= 0; i--) {
+//     const date = new Date(now)
+//     date.setDate(date.getDate() - i)
 
-    // Weight data (gradual decrease trend)
-    if (Math.random() > 0.3) {
-      mockData.push({
-        id: Date.now() + Math.random() * 1000,
-        type: "weight",
-        value: (75 - i * 0.1 + (Math.random() * 2 - 1)).toFixed(1),
-        date: date.toISOString().split("T")[0],
-        time: "08:00",
-        notes: i === 30 ? "Starting weight" : i === 0 ? "Current weight" : "",
-        timestamp: date.getTime(),
-      })
-    }
+//     // Weight data (gradual decrease trend)
+//     if (Math.random() > 0.3) {
+//       mockData.push({
+//         id: Date.now() + Math.random() * 1000,
+//         type: "weight",
+//         value: (75 - i * 0.1 + (Math.random() * 2 - 1)).toFixed(1),
+//         date: date.toISOString().split("T")[0],
+//         time: "08:00",
+//         notes: i === 30 ? "Starting weight" : i === 0 ? "Current weight" : "",
+//         timestamp: date.getTime(),
+//       })
+//     }
 
-    // Height data (stable)
-    if (i === 30 || i === 15 || i === 0) {
-      // Less frequent for height
-      mockData.push({
-        id: Date.now() + Math.random() * 1000,
-        type: "height",
-        value: (175 + Math.random() * 2 - 1).toFixed(1),
-        date: date.toISOString().split("T")[0],
-        time: "09:00",
-        notes: "Height measurement",
-        timestamp: date.getTime(),
-      })
-    }
+//     // Height data (stable)
+//     if (i === 30 || i === 15 || i === 0) {
+//       // Less frequent for height
+//       mockData.push({
+//         id: Date.now() + Math.random() * 1000,
+//         type: "height",
+//         value: (175 + Math.random() * 2 - 1).toFixed(1),
+//         date: date.toISOString().split("T")[0],
+//         time: "09:00",
+//         notes: "Height measurement",
+//         timestamp: date.getTime(),
+//       })
+//     }
 
-    // Steps data (daily)
-    if (Math.random() > 0.2) {
-      const steps = 5000 + Math.floor(Math.random() * 8000)
-      mockData.push({
-        id: Date.now() + Math.random() * 1000,
-        type: "steps",
-        value: steps,
-        date: date.toISOString().split("T")[0],
-        time: "23:59",
-        notes: steps > 10000 ? "Great day!" : steps < 6000 ? "Need more activity" : "",
-        timestamp: date.getTime(),
-      })
-    }
+//     // Steps data (daily)
+//     if (Math.random() > 0.2) {
+//       const steps = 5000 + Math.floor(Math.random() * 8000)
+//       mockData.push({
+//         id: Date.now() + Math.random() * 1000,
+//         type: "steps",
+//         value: steps,
+//         date: date.toISOString().split("T")[0],
+//         time: "23:59",
+//         notes: steps > 10000 ? "Great day!" : steps < 6000 ? "Need more activity" : "",
+//         timestamp: date.getTime(),
+//       })
+//     }
 
-    // Heart rate data (varies throughout day)
-    if (Math.random() > 0.4) {
-      const baseHeartRate = 72
-      const variation = Math.random() * 20 - 10
-      mockData.push({
-        id: Date.now() + Math.random() * 1000,
-        type: "heartRate",
-        value: Math.round(baseHeartRate + variation),
-        date: date.toISOString().split("T")[0],
-        time: `${8 + Math.floor(Math.random() * 12)}:${Math.floor(Math.random() * 60)
-          .toString()
-          .padStart(2, "0")}`,
-        notes: Math.random() > 0.8 ? "After exercise" : "",
-        timestamp: date.getTime() + Math.random() * 86400000,
-      })
-    }
+//     // Heart rate data (varies throughout day)
+//     if (Math.random() > 0.4) {
+//       const baseHeartRate = 72
+//       const variation = Math.random() * 20 - 10
+//       mockData.push({
+//         id: Date.now() + Math.random() * 1000,
+//         type: "heartRate",
+//         value: Math.round(baseHeartRate + variation),
+//         date: date.toISOString().split("T")[0],
+//         time: `${8 + Math.floor(Math.random() * 12)}:${Math.floor(Math.random() * 60)
+//           .toString()
+//           .padStart(2, "0")}`,
+//         notes: Math.random() > 0.8 ? "After exercise" : "",
+//         timestamp: date.getTime() + Math.random() * 86400000,
+//       })
+//     }
 
-    // Blood pressure data (weekly measurements)
-    if (i % 7 === 0) {
-      const systolic = 120 + Math.floor(Math.random() * 20 - 10)
-      const diastolic = 80 + Math.floor(Math.random() * 10 - 5)
-      mockData.push({
-        id: Date.now() + Math.random() * 1000,
-        type: "bloodPressure",
-        value: `${systolic}/${diastolic}`,
-        date: date.toISOString().split("T")[0],
-        time: "09:00",
-        notes: "Weekly check",
-        timestamp: date.getTime(),
-      })
-    }
+//     // Blood pressure data (weekly measurements)
+//     if (i % 7 === 0) {
+//       const systolic = 120 + Math.floor(Math.random() * 20 - 10)
+//       const diastolic = 80 + Math.floor(Math.random() * 10 - 5)
+//       mockData.push({
+//         id: Date.now() + Math.random() * 1000,
+//         type: "bloodPressure",
+//         value: `${systolic}/${diastolic}`,
+//         date: date.toISOString().split("T")[0],
+//         time: "09:00",
+//         notes: "Weekly check",
+//         timestamp: date.getTime(),
+//       })
+//     }
 
-    // Blood sugar data (occasional)
-    if (Math.random() > 0.6) {
-      const bloodSugar = 90 + Math.floor(Math.random() * 30 - 15)
-      mockData.push({
-        id: Date.now() + Math.random() * 1000,
-        type: "bloodSugar",
-        value: bloodSugar,
-        date: date.toISOString().split("T")[0],
-        time: "10:00",
-        notes: bloodSugar > 120 ? "After meal" : "Fasting",
-        timestamp: date.getTime(),
-      })
-    }
+//     // Blood sugar data (occasional)
+//     if (Math.random() > 0.6) {
+//       const bloodSugar = 90 + Math.floor(Math.random() * 30 - 15)
+//       mockData.push({
+//         id: Date.now() + Math.random() * 1000,
+//         type: "bloodSugar",
+//         value: bloodSugar,
+//         date: date.toISOString().split("T")[0],
+//         time: "10:00",
+//         notes: bloodSugar > 120 ? "After meal" : "Fasting",
+//         timestamp: date.getTime(),
+//       })
+//     }
 
-    // Removed temperature and sleep mock data generation
-    // if (Math.random() > 0.9) { ... }
-    // if (Math.random() > 0.2) { ... }
-  }
+//     // Removed temperature and sleep mock data generation
+//     // if (Math.random() > 0.9) { ... }
+//     // if (Math.random() > 0.2) { ... }
+//   }
 
-  // Sort by timestamp
-  healthData = mockData.sort((a, b) => a.timestamp - b.timestamp)
+//   // Sort by timestamp
+//   healthData = mockData.sort((a, b) => a.timestamp - b.timestamp)
 
-  // Initialize some sample goals
-  goals = {
-    weight: 70,
-    height: 175,
-    heartRate: 75,
-    bloodPressure: "120/80",
-    steps: 10000,
-    sleep: 8, // Keep sleep goal for now, as it's in add-target.html
-  }
+//   // Initialize some sample goals
+//   goals = {
+//     weight: 70,
+//     height: 175,
+//     heartRate: 75,
+//     bloodPressure: "120/80",
+//     steps: 10000,
+//     sleep: 8, // Keep sleep goal for now, as it's in add-target.html
+//   }
 
-  // Save to localStorage
-  saveData()
+//   // Save to localStorage
+//   saveData()
 
-  console.log(` Generated ${healthData.length} mock health records`)
-}
+//   console.log(` Generated ${healthData.length} mock health records`)
+// }
 
 // ============================================================================
 // NAVIGATION AND VIEW MANAGEMENT (Simplified for multi-page)
@@ -424,9 +425,9 @@ function handleFormSubmit(e) {
       window.location.href = "main-page.html"
     }, 1000) // Give time for alert to be seen
 
-    console.log("✅ New health metric added:", newEntry)
+    console.log("New health metric added:", newEntry)
   } catch (error) {
-    console.error("❌ Error adding health metric:", error)
+    console.error("Error adding health metric:", error)
     showBootstrapAlert("Error adding health metric. Please try again.", "danger")
   }
 }
@@ -1015,6 +1016,227 @@ function confirmClearHistory() {
 
   showBootstrapAlert("History cleared successfully!", "success")
 }
+
+// ============================================================================
+// GOALS MANAGEMENT
+// ============================================================================
+
+/**
+ * Set a health goal for a specific metric
+ * @param {string} type - Metric type
+ */
+// function setGoal(type) {
+//   console.log(`🎯 Setting goal for ${type}...`)
+
+//   let goalValue
+
+//   if (type === "bloodPressure") {
+//     const systolic = document.getElementById("systolicGoal")?.value
+//     const diastolic = document.getElementById("diastolicGoal")?.value
+
+//     if (!systolic || !diastolic) {
+//       showBootstrapAlert("Please enter both systolic and diastolic values", "warning")
+//       return
+//     }
+
+//     goalValue = `${systolic}/${diastolic}`
+//   } else {
+//     const input = document.getElementById(`${type}Goal`)
+//     if (!input || !input.value) {
+//       showBootstrapAlert("Please enter a valid goal value", "warning")
+//       return
+//     }
+
+//     goalValue = Number.parseFloat(input.value)
+//     if (isNaN(goalValue)) {
+//       showBootstrapAlert("Please enter a valid numeric value", "warning")
+//       return
+//     }
+//   }
+
+//   // Save goal
+//   goals[type] = goalValue
+//   saveData()
+//   updateGoals()
+
+//   showBootstrapAlert("Goal set successfully!", "success")
+
+//   // Redirect to view-targets.html after successful goal setting
+//   setTimeout(() => {
+//     window.location.href = "my-targets.html"
+//   }, 1000) // Give time for alert to be seen
+// }
+
+// /**
+//  * Update the goals view with current progress
+//  */
+// function updateGoals() {
+//   console.log("🎯 Updating goals...")
+
+//   const goalTypes = ["weight", "heartRate", "bloodPressure", "sleep"]
+
+//   goalTypes.forEach((type) => {
+//     updateGoalStatus(type)
+//   })
+// }
+
+
+// /**
+//  * Update goal status for a specific metric type
+//  * @param {string} type - Metric type
+//  */
+// function updateGoalStatus(type) {
+//   const statusElement = document.getElementById(`${type}GoalStatus`)
+//   if (!statusElement) return
+
+//   const goal = goals[type]
+
+//   if (!goal) {
+//     statusElement.innerHTML = `
+//       <div class="alert alert-light text-center">
+//         <i class="fas fa-target text-muted"></i>
+//         <p class="mb-0 text-muted">No goal set</p>
+//       </div>
+//     `
+//     return
+//   }
+
+//   const latestEntry = getLatestEntry(type)
+//   if (!latestEntry) {
+//     statusElement.innerHTML = `
+//       <div class="alert alert-light text-center">
+//         <i class="fas fa-chart-line text-muted"></i>
+//         <p class="mb-0 text-muted">No data available</p>
+//       </div>
+//     `
+//     return
+//   }
+
+//   let achieved = false
+//   let statusText = ""
+//   let progressPercentage = 0
+
+//   if (type === "bloodPressure") {
+//     // Handle blood pressure goals
+//     const [goalSys, goalDia] = goal.split("/").map(Number)
+//     const [currentSys, currentDia] = latestEntry.value.split("/").map(Number)
+
+//     achieved = currentSys <= goalSys && currentDia <= goalDia
+//     statusText = achieved ? "Goal achieved!" : `Current: ${latestEntry.value}, Target: ${goal}`
+
+//     // Calculate progress based on how close to target
+//     const sysProgress = Math.max(0, 100 - Math.abs(currentSys - goalSys))
+//     const diaProgress = Math.max(0, 100 - Math.abs(currentDia - goalDia))
+//     progressPercentage = (sysProgress + diaProgress) / 2
+//   } else {
+//     // Handle numeric goals
+//     const current = Number.parseFloat(latestEntry.value)
+//     const target = Number.parseFloat(goal)
+//     const difference = Math.abs(current - target)
+//     const tolerance = target * 0.05 // 5% tolerance
+
+//     achieved = difference <= tolerance
+//     statusText = achieved ? "Goal achieved!" : `Current: ${current}, Target: ${target}`
+
+//     // Calculate progress percentage
+//     const maxDifference = target * 0.2 // 20% is considered 0% progress
+//     progressPercentage = Math.max(0, 100 - (difference / maxDifference) * 100)
+//   }
+
+//   // Create Bootstrap progress bar and alert
+//   const alertClass = achieved ? "alert-success" : "alert-info"
+//   const progressBarClass = achieved ? "bg-success" : "bg-primary"
+//   const icon = achieved ? "fas fa-check-circle" : "fas fa-target"
+
+//   statusElement.innerHTML = `
+//     <div class="alert ${alertClass}">
+//       <div class="d-flex align-items-center mb-2">
+//         <i class="${icon} me-2"></i>
+//         <span>${statusText}</span>
+//       </div>
+//       ${
+//         !achieved
+//           ? `
+//         <div class="progress mb-2" style="height: 8px;">
+//           <div class="progress-bar ${progressBarClass}" role="progressbar" 
+//                style="width: ${Math.min(100, progressPercentage)}%" 
+//                aria-valuenow="${Math.round(progressPercentage)}" 
+//                aria-valuemin="0" aria-valuemax="100">
+//           </div>
+//         </div>
+//         <small class="text-muted">${Math.round(progressPercentage)}% to goal</small>
+//       `
+//           : ""
+//       }
+//     </div>
+//   `
+// }
+
+function handleGoalFormSubmit(event) {
+  event.preventDefault();
+
+  const metricType = document.getElementById("goalMetricType").value;
+  const comparison = document.getElementById("comparisonType").value;
+  const stats = document.getElementById("statisticsType").value;
+  const targetDate = document.getElementById("targetDate").value;
+  const notes = document.getElementById("goalNotes").value;
+
+  let target = {
+    metricType,
+    comparison,
+    stats,
+    targetDate,
+    notes,
+    createdAt: new Date().toISOString(),
+  };
+
+  if (metricType === "bloodPressure") {
+    const sys = parseInt(document.getElementById("goalSystolic").value);
+    const dia = parseInt(document.getElementById("goalDiastolic").value);
+    if (!isNaN(sys) && !isNaN(dia)) {
+      target.value = `${sys}/${dia}`;
+    } else {
+      alert("Please enter valid systolic and diastolic values.");
+      return;
+    }
+  } else if (comparison === "range") {
+    const min = parseFloat(document.getElementById("rangeMin").value);
+    const max = parseFloat(document.getElementById("rangeMax").value);
+    if (!isNaN(min) && !isNaN(max)) {
+      target.value = `${min} - ${max}`;
+    } else {
+      alert("Please enter valid minimum and maximum values.");
+      return;
+    }
+  } else {
+    const value = parseFloat(document.getElementById("goalValue").value);
+    if (!isNaN(value)) {
+      target.value = value;
+    } else {
+      alert("Please enter a valid goal value.");
+      return;
+    }
+  }
+
+  // Load and validate existing data
+  let existing = [];
+  try {
+    const stored = JSON.parse(localStorage.getItem("healthGoals"));
+    if (Array.isArray(stored)) {
+      existing = stored;
+    }
+  } catch (e) {
+    console.warn("Corrupt localStorage data for healthGoals, resetting...");
+  }
+
+  // Save
+  existing.push(target);
+  localStorage.setItem("healthGoals", JSON.stringify(existing));
+
+  alert("🎯 Goal saved successfully!");
+  event.target.reset(); // Reset the form
+}
+
 
 
 
