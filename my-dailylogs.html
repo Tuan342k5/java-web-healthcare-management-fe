@@ -10,14 +10,15 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-    <!-- Bootstrap 5 CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
   </head>
+
   <body>
     <div class="app-container">
+      <!-- ... (bỏ qua phần header, navbar, footer không đổi) ... -->
       <!-- Top Header with Contact Info -->
       <div class="top-header">
         <div class="contact-info">
@@ -126,15 +127,13 @@
             <div class="hero-shape-2"></div>
           </div>
           <div class="hero-text">
-            <h1>Your Health History</h1>
-            <p>Review all your past health records</p>
+            <h1>Your Daily Log</h1>
+            <p>Record your daily health metrics</p>
           </div>
         </div>
       </section>
-
       <!-- Main Content -->
       <main class="main-content">
-        <!-- History View -->
         <div id="history-view" class="content-view active">
           <div class="history-container">
             <div class="history-header">
@@ -143,12 +142,15 @@
                 <select id="historyFilter">
                   <option value="all">All Metrics</option>
                   <option value="weight">Weight</option>
-                  <option value="heartRate">Heart Rate</option>
-                  <option value="bloodPressure">Blood Pressure</option>
-                  <option value="bloodSugar">Blood Sugar</option>
-                  <option value="temperature">Temperature</option>
-                  <option value="sleep">Sleep</option>
+                  <option value="height">Height</option>
+                  <option value="steps">Steps</option>
+                  <option value="heart Rate">Heart Rate</option>
+                  <option value="blood Pressure">Blood Pressure</option>
+                  <option value="exercise Time">Exercise Time</option>
+                  <option value="blood Sugar">Blood Sugar</option>
+                  <option value="sleep Hours">Sleep Time</option>
                 </select>
+                <input type="date" id="dateFilter" />
                 <button id="clearHistory" class="btn-danger">
                   Clear History
                 </button>
@@ -158,7 +160,6 @@
           </div>
         </div>
       </main>
-
       <!-- Footer with Action Buttons -->
       <footer class="bg-light border-top mt-5 py-4">
         <div class="container">
@@ -208,5 +209,158 @@
 
     <script src="js/main-script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      let allRecords = [];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchHealthRecords();
+        document
+          .getElementById("historyFilter")
+          .addEventListener("change", applyFilter);
+        document
+          .getElementById("dateFilter")
+          .addEventListener("change", applyFilter);
+      });
+
+      function fetchHealthRecords() {
+        fetch("http://localhost:8286/api/healthrecords")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to fetch health records.");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            allRecords = data;
+            renderHealthRecords(allRecords);
+          })
+          .catch((error) => {
+            console.error("Error fetching health records:", error);
+          });
+      }
+
+      function applyFilter() {
+        const metric = document.getElementById("historyFilter").value;
+        const date = document.getElementById("dateFilter").value;
+        let filtered = allRecords;
+
+        if (metric !== "all") {
+          filtered = filtered.filter(
+            (r) =>
+              r.metricName &&
+              r.metricName.toLowerCase() === metric.toLowerCase()
+          );
+        }
+
+        if (date) {
+          filtered = filtered.filter(
+            (r) => r.logDate && r.logDate.startsWith(date)
+          );
+        }
+
+        renderHealthRecords(filtered);
+      }
+
+      function renderHealthRecords(records) {
+        const container = document.getElementById("historyList");
+        container.innerHTML = "";
+
+        if (!records || records.length === 0) {
+          container.innerHTML = "<p>No records found.</p>";
+          return;
+        }
+
+        records.forEach((record) => {
+          const card = document.createElement("div");
+          card.className = "card mb-3";
+
+          card.innerHTML = `
+        <div class="card-body">
+          <h5 class="card-title">${record.metricName} (${record.unit})</h5>
+          <p class="card-text">Value: <span id="value-${record.healthRecordId}">${record.value}</span></p>
+          <p class="card-text">Date: ${record.logDate}</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-primary" onclick="editRecord(${record.healthRecordId})">
+              <i class="fas fa-edit me-1"></i>Edit
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteRecord(${record.healthRecordId})">
+              <i class="fas fa-trash me-1"></i>Delete
+            </button>
+          </div>
+        </div>
+      `;
+
+          container.appendChild(card);
+        });
+      }
+
+      function editRecord(recordId) {
+        const record = allRecords.find((r) => r.healthRecordId === recordId);
+        if (!record) return;
+
+        const newValue = prompt(
+          `Enter new value for ${record.metricName}:`,
+          record.value
+        );
+        if (newValue === null || newValue.trim() === "") return;
+
+        // Cập nhật record mới từ DTO
+        const updatedRecord = {
+          healthRecordId: record.healthRecordId,
+          value: parseFloat(newValue),
+          logId: record.logId,
+          logDate: record.logDate,
+          userId: record.userId,
+          metricId: record.metricId,
+        };
+
+        fetch(`http://localhost:8286/api/healthrecords/${recordId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedRecord),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Update failed");
+            return res.json();
+          })
+          .then((updated) => {
+            document.getElementById(`value-${recordId}`).innerText =
+              updated.value;
+            const index = allRecords.findIndex(
+              (r) => r.healthRecordId === recordId
+            );
+            if (index !== -1) allRecords[index].value = updated.value;
+            alert("Cập nhật thành công!");
+          })
+          .catch((err) => {
+            console.error("Update error:", err);
+            alert("Cập nhật thất bại.");
+          });
+      }
+
+      function deleteRecord(recordId) {
+        if (!confirm("Bạn có chắc chắn muốn xoá chỉ số này?")) return;
+
+        fetch(`http://localhost:8286/api/healthrecords/${recordId}`, {
+          method: "DELETE",
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("Delete failed");
+            // Xoá record trong mảng
+            allRecords = allRecords.filter(
+              (r) => r.healthRecordId !== recordId
+            );
+            renderHealthRecords(allRecords);
+            alert("Xoá thành công!");
+          })
+          .catch((err) => {
+            console.error("Delete error:", err);
+            alert("Xoá thất bại.");
+          });
+      }
+    </script>
   </body>
 </html>

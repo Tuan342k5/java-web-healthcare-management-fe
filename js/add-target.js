@@ -3,26 +3,76 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const goalForm = document.getElementById("goalForm");
   const metricSelect = document.getElementById("goalMetricType");
+  const editTarget = JSON.parse(localStorage.getItem("editTarget"));
+  const userId = parseInt(localStorage.getItem("userId"));
 
+  if (!userId || isNaN(userId)) {
+    alert("UserId not found! Have you logged in?");
+    return;
+  }
+
+  // Nếu đang chỉnh sửa mục tiêu → nạp lại dữ liệu vào form
+  if (editTarget) {
+    document.getElementById("goalNotes").value = editTarget.title || "";
+    document.getElementById("targetDate").value = editTarget.endDate || "";
+
+    const detail = editTarget.details?.[0];
+    const metricId = detail?.metricId;
+    const comparisonType = detail?.comparisonType;
+    const aggregationType = detail?.aggregationType;
+    const targetValue = detail?.targetValue;
+
+    document.getElementById("comparisonType").value = comparisonType || "equal";
+    document.getElementById("statisticsType").value =
+      aggregationType || "latest";
+
+    // Đợi metricTypesMap load xong rồi chọn đúng option
+    const interval = setInterval(() => {
+      if (Object.keys(metricTypesMap).length > 0) {
+        const metricEntry = Object.entries(metricTypesMap).find(
+          ([k, v]) => v === metricId
+        );
+        if (metricEntry) {
+          document.getElementById("goalMetricType").value = metricEntry[0];
+          triggerMetricChange(metricEntry[0]);
+
+          // Gán giá trị theo từng kiểu
+          if (
+            metricEntry[0] === "bloodpressure" &&
+            typeof targetValue === "string"
+          ) {
+            const [sys, dia] = targetValue.split("/").map((v) => parseInt(v));
+            document.getElementById("goalSystolic").value = sys || "";
+            document.getElementById("goalDiastolic").value = dia || "";
+          } else if (
+            comparisonType === "range" &&
+            typeof targetValue === "string"
+          ) {
+            const [min, max] = targetValue.split("-").map((v) => parseFloat(v));
+            document.getElementById("rangeMin").value = min || "";
+            document.getElementById("rangeMax").value = max || "";
+          } else {
+            document.getElementById("goalValue").value = targetValue;
+          }
+        }
+        clearInterval(interval);
+      }
+    }, 100);
+
+    // Cập nhật tiêu đề
+    const titleEl = document.getElementById("formTitle");
+    if (titleEl) titleEl.textContent = "✏️ Chỉnh sửa mục tiêu";
+  }
+
+  // Xử lý SUBMIT FORM
   goalForm.addEventListener("submit", async function (event) {
     event.preventDefault();
-
-    const userId = parseInt(localStorage.getItem("userId"));
-    if (!userId || isNaN(userId)) {
-      alert("UserId not found! Have you logged in?");
-      return;
-    }
 
     const metricKey = metricSelect.value.toLowerCase().replace(/\s+/g, "");
     const metricId = metricTypesMap[metricKey];
 
-    console.log("🔍 Chọn metric:", metricSelect.value);
-    console.log("🔑 metricKey:", metricKey);
-    console.log("🆔 Tìm thấy metricId:", metricId);
-
     if (!metricId) {
-      alert(`Cannot found metricId for metric "${metricSelect.value}"`);
-      console.warn(" metricTypesMap: ", metricTypesMap);
+      alert(`Không tìm thấy metricId cho metric "${metricSelect.value}"`);
       return;
     }
 
@@ -54,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       const value = parseFloat(document.getElementById("goalValue").value);
       if (!isNaN(value)) {
-        targetValue = Math.round(value); // kiểu Long
+        targetValue = Math.round(value);
       } else {
         alert("❗ Vui lòng nhập giá trị mục tiêu hợp lệ.");
         return;
@@ -80,20 +130,29 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("📦 Payload gửi backend:", JSON.stringify(payload, null, 2));
 
     try {
-      const response = await fetch("http://localhost:8286/api/targets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      let response;
+      if (editTarget) {
+        response = await fetch(
+          `http://localhost:8286/api/targets/${editTarget.targetId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }
+        );
+        localStorage.removeItem("editTarget");
+      } else {
+        response = await fetch("http://localhost:8286/api/targets", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
       const contentType = response.headers.get("content-type");
-      let responseData;
-
-      if (contentType && contentType.includes("application/json")) {
-        responseData = await response.json();
-      } else {
-        responseData = await response.text();
-      }
+      const responseData = contentType?.includes("application/json")
+        ? await response.json()
+        : await response.text();
 
       console.log("📬 Phản hồi từ server:", response.status, responseData);
 
@@ -102,8 +161,12 @@ document.addEventListener("DOMContentLoaded", function () {
           `❌ Gửi thất bại (${response.status}) - Xem console để biết thêm.`
         );
       } else {
-        alert("🎯 Mục tiêu đã được tạo thành công!");
-        goalForm.reset();
+        alert(
+          editTarget
+            ? "✅ Đã cập nhật mục tiêu thành công!"
+            : "🎯 Mục tiêu đã được tạo thành công!"
+        );
+        window.location.href = "my-targets.html";
       }
     } catch (error) {
       console.error("🚨 Lỗi kết nối:", error);
@@ -120,7 +183,6 @@ function loadMetricTypesFromAPI() {
     .then((data) => {
       const dropdown = document.getElementById("goalMetricType");
       dropdown.innerHTML = "";
-
       metricTypesMap = {};
 
       data.forEach((metric) => {
@@ -133,25 +195,28 @@ function loadMetricTypesFromAPI() {
         dropdown.appendChild(option);
       });
 
-      console.log("metricTypesMap loaded:", metricTypesMap);
+      console.log("✅ metricTypesMap loaded:", metricTypesMap);
     })
     .catch((err) => {
       console.error("Không tải được metric-types:", err);
     });
+
   document
     .getElementById("goalMetricType")
     .addEventListener("change", function () {
-      const selectedKey = this.value;
-
-      const goalValueGroup = document.getElementById("goalValueGroup");
-      const goalBPGroup = document.getElementById("goalBloodPressureGroup");
-
-      if (selectedKey === "bloodpressure") {
-        goalValueGroup.style.display = "none";
-        goalBPGroup.style.display = "block";
-      } else {
-        goalValueGroup.style.display = "block";
-        goalBPGroup.style.display = "none";
-      }
+      triggerMetricChange(this.value);
     });
+}
+
+function triggerMetricChange(selectedKey) {
+  const goalValueGroup = document.getElementById("goalValueGroup");
+  const goalBPGroup = document.getElementById("goalBloodPressureGroup");
+
+  if (selectedKey === "bloodpressure") {
+    goalValueGroup.style.display = "none";
+    goalBPGroup.style.display = "block";
+  } else {
+    goalValueGroup.style.display = "block";
+    goalBPGroup.style.display = "none";
+  }
 }

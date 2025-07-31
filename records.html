@@ -1,15 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Health Statistics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="css/stats-style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="p-4">
-  <div class="container">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Health Tracker</title>
+    <link rel="stylesheet" href="css/main-styles.css" />
+    <link rel="stylesheet" href="css/stats-style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Top Header with Contact Info -->
+      <div class="top-header">
+        <div class="contact-info">
+          <span class="phone">0987654321</span>
+          <span class="email">user@example.com</span>
+        </div>
+      </div>
+
+      <!-- Main Header -->
+      <nav class="navbar navbar-expand-lg main-header">
+        <div class="container-fluid header-content">
+          <!-- Logo -->
+          <a class="navbar-brand logo-placeholder" href="main-page.html">
+            <img src="imgs/healthcare_logo(2).png" />
+          </a>
+
+          <!-- Hamburger button -->
+          <button
+            class="navbar-toggler menu-toggle"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+            aria-controls="mainNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Menu -->
+          <div class="collapse navbar-collapse main-nav" id="mainNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link nav-btn" href="main-page.html">Home</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link nav-btn" href="records.html"
+                  >Progress Records</a
+                >
+              </li>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle dropdown-btn"
+                  href="#"
+                  id="targetsDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
+                  <li>
+                    <a class="dropdown-item" href="my-targets.html"
+                      >Show My Targets</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="add-target.html"
+                      >Add New Target</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle dropdown-btn"
+                  href="#"
+                  id="logsDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+                  <li>
+                    <a class="dropdown-item" href="my-dailylogs.html"
+                      >Show Daily Logs</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="add-dailylog.html"
+                      >Add New</a
+                    >
+                  </li>
+                </ul>
+              </li>
+
+              <!-- User Account Dropdown -->
+              <div class="nav-item dropdown">
+                <button
+                  class="nav-btn dropdown-btn"
+                  type="button"
+                  id="userAccountDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Hello, <span id="current-user-name">Guest</span>!
+                  <i class="fas fa-chevron-down dropdown-icon"></i>
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userAccountDropdown"
+                >
+                  <li>
+                    <a class="dropdown-item" href="#" 
+                      >Settings</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="login.html"
+                      
+                      >Logout</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <div class="hero-graphics">
+            <div class="hero-shape-1"></div>
+            <div class="hero-shape-2"></div>
+          </div>
+          <div class="hero-text">
+            <h1>Your Record Statistics</h1>
+            <p>Track your wellness journey with comprehensive health metrics</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Dashboard View (Default) -->
+        <div class="container">
     <a href="main-page.html" class="btn btn-secondary mb-3">Back to Main Page</a>
     <h2 class="mb-4">Health Statistics</h2>
 
@@ -26,6 +184,23 @@
     <div id="chartsContainer" class="d-flex flex-column gap-5"></div>
   </div>
 
-  <script src="js/stats-script.js"></script>
-</body>
+      </main>     
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <p class="footer-copy">
+          &copy; 2025 Health Tracker App. All rights reserved.
+        </p>
+        <p class="footer-links">
+          <a href="#">Privacy Policy</a> |
+          <a href="#">Terms of Service</a>
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="js/main-script.js"></script>
+    <script src="js/stats-script.js"></script>
+    <!-- Bootstrap JS (gồm Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>

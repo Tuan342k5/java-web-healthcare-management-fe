@@ -15,11 +15,6 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Font Awesome nếu bạn dùng icon -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <div class="app-container">
@@ -134,7 +129,7 @@
                   aria-labelledby="userAccountDropdown"
                 >
                   <li>
-                    <a class="dropdown-item" href="#" onclick="showSettings()"
+                    <a class="dropdown-item" href="#" 
                       >Settings</a
                     >
                   </li>
@@ -143,7 +138,7 @@
                     <a
                       class="dropdown-item"
                       href="login.html"
-                      onclick="logoutUser()"
+                      
                       >Logout</a
                     >
                   </li>
@@ -193,10 +188,6 @@
 
           <!-- Quick Actions -->
           <section class="quick-actions">
-            <button class="action-btn primary" onclick="showAddMetric()">
-              <i class="fas fa-plus"></i>
-              Add New Entry
-            </button>
             <button class="action-btn secondary" onclick="showHistory()">
               <i class="fas fa-history"></i>
               View Daily Logs
@@ -208,179 +199,7 @@
           </section>
         </div>
 
-        <!-- Add Metric View -->
-        <div id="add-metric-view" class="content-view">
-          <div class="form-container">
-            <h2>Add Health Metric</h2>
-            <form id="healthForm">
-              <div class="form-group">
-                <label for="metricType">Metric Type</label>
-                <select id="metricType" required>
-                  <option value="">Select metric type</option>
-                  <option value="weight">Weight (kg)</option>
-                  <option value="heartRate">Heart Rate (bpm)</option>
-                  <option value="bloodPressure">Blood Pressure (mmHg)</option>
-                  <option value="bloodSugar">Blood Sugar (mg/dL)</option>
-                  <option value="temperature">Body Temperature (°C)</option>
-                  <option value="sleep">Sleep Hours</option>
-                </select>
-              </div>
-
-              <div class="form-group" id="valueGroup">
-                <label for="metricValue">Value</label>
-                <input type="number" id="metricValue" step="0.1" required />
-              </div>
-
-              <div
-                class="form-group"
-                id="bloodPressureGroup"
-                style="display: none"
-              >
-                <label for="systolic">Systolic</label>
-                <input type="number" id="systolic" min="70" max="200" />
-                <label for="diastolic">Diastolic</label>
-                <input type="number" id="diastolic" min="40" max="120" />
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="metricDate">Date</label>
-                  <input type="date" id="metricDate" required />
-                </div>
-                <div class="form-group">
-                  <label for="metricTime">Time</label>
-                  <input type="time" id="metricTime" required />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="notes">Notes (Optional)</label>
-                <textarea
-                  id="notes"
-                  rows="3"
-                  placeholder="Any additional notes..."
-                ></textarea>
-              </div>
-
-              <div class="form-actions">
-                <button
-                  type="button"
-                  class="btn-secondary"
-                  onclick="showDashboard()"
-                >
-                  Cancel
-                </button>
-                <button type="submit" class="btn-primary">Save Metric</button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- History View -->
-        <div id="history-view" class="content-view">
-          <div class="history-container">
-            <div class="history-header">
-              <h2>Health History</h2>
-              <div class="filter-controls">
-                <select id="historyFilter">
-                  <option value="all">All Metrics</option>
-                  <option value="weight">Weight</option>
-                  <option value="heartRate">Heart Rate</option>
-                  <option value="bloodPressure">Blood Pressure</option>
-                  <option value="bloodSugar">Blood Sugar</option>
-                  <option value="temperature">Temperature</option>
-                  <option value="sleep">Sleep</option>
-                </select>
-                <button id="clearHistory" class="btn-danger">
-                  Clear History
-                </button>
-              </div>
-            </div>
-            <div id="historyList" class="history-list"></div>
-          </div>
-        </div>
-
-        <!-- Goals View -->
-        <div id="goals-view" class="content-view">
-          <div class="goals-container">
-            <h2>Health Goals</h2>
-            <div class="goals-grid">
-              <div class="goal-card">
-                <h3>Weight Goal</h3>
-                <div class="goal-input">
-                  <input
-                    type="number"
-                    id="weightGoal"
-                    placeholder="Target weight (kg)"
-                    step="0.1"
-                  />
-                  <button onclick="setGoal('weight')" class="btn-secondary">
-                    Set Goal
-                  </button>
-                </div>
-                <div id="weightGoalStatus" class="goal-status"></div>
-              </div>
-
-              <div class="goal-card">
-                <h3>Heart Rate Goal</h3>
-                <div class="goal-input">
-                  <input
-                    type="number"
-                    id="heartRateGoal"
-                    placeholder="Target heart rate (bpm)"
-                  />
-                  <button onclick="setGoal('heartRate')" class="btn-secondary">
-                    Set Goal
-                  </button>
-                </div>
-                <div id="heartRateGoalStatus" class="goal-status"></div>
-              </div>
-
-              <div class="goal-card">
-                <h3>Blood Pressure Goal</h3>
-                <div class="goal-input">
-                  <input
-                    type="number"
-                    id="systolicGoal"
-                    placeholder="Systolic"
-                    style="width: 45%"
-                  />
-                  <input
-                    type="number"
-                    id="diastolicGoal"
-                    placeholder="Diastolic"
-                    style="width: 45%"
-                  />
-                  <button
-                    onclick="setGoal('bloodPressure')"
-                    class="btn-secondary"
-                  >
-                    Set Goal
-                  </button>
-                </div>
-                <div id="bloodPressureGoalStatus" class="goal-status"></div>
-              </div>
-
-              <div class="goal-card">
-                <h3>Sleep Goal</h3>
-                <div class="goal-input">
-                  <input
-                    type="number"
-                    id="sleepGoal"
-                    placeholder="Target sleep hours"
-                    step="0.5"
-                  />
-                  <button onclick="setGoal('sleep')" class="btn-secondary">
-                    Set Goal
-                  </button>
-                </div>
-                <div id="sleepGoalStatus" class="goal-status"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+      </main>     
     <!-- Footer -->
     <footer class="app-footer">
       <div class="footer-container">

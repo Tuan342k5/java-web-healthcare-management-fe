@@ -1,25 +1,48 @@
-function generateLabels(timeRange, count) {
-  switch (timeRange) {
-    case "day":
-      return Array.from({ length: count }, (_, i) => `Day ${i + 1}`);
-    case "week":
-      return Array.from({ length: count }, (_, i) => `Week ${i + 1}`);
-    case "month":
-      return [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ].slice(0, count);
+const currentUserId = 1; // 👉 thay bằng userId hiện tại
+
+async function fetchHealthRecords() {
+  const res = await fetch(
+    `http://localhost:8286/api/healthrecords/user/${currentUserId}`
+  );
+  if (!res.ok) throw new Error("Failed to fetch data");
+  return await res.json();
+}
+
+function groupByMetric(records) {
+  const grouped = {};
+  records.forEach((r) => {
+    if (!grouped[r.metricId]) {
+      grouped[r.metricId] = {
+        name: r.metricName,
+        unit: r.unit,
+        data: [],
+      };
+    }
+    grouped[r.metricId].data.push({
+      date: r.logDate,
+      value: r.value,
+    });
+  });
+  return grouped;
+}
+
+function getPast7DaysLabels() {
+  const labels = [];
+  const today = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    labels.push(d.toISOString().split("T")[0]);
   }
+  return labels;
+}
+
+function prepareChartData(metricData, labels) {
+  const valueMap = {};
+  metricData.forEach((entry) => {
+    valueMap[entry.date] = entry.value;
+  });
+  return labels.map((date) => valueMap[date] || null);
 }
 
 function getColor(index) {
@@ -35,84 +58,67 @@ function getColor(index) {
   return colors[index % colors.length];
 }
 
-function renderAllCharts(timeRange) {
-  const chartTitles = [
-    "Weight (kg)",
-    "Height (cm)",
-    "Steps (steps)",
-    "Heart Rate (bpm)",
-    "Blood Sugar (mg/dL)",
-    "Blood Pressure (mmHg)",
-    "Sleep Hours",
-  ];
-
+async function renderAllCharts() {
   const container = document.getElementById("chartsContainer");
   container.innerHTML = "";
 
-  chartTitles.forEach((title, index) => {
-    const count = timeRange === "month" ? 12 : 7;
-    const labels = generateLabels(timeRange, count);
+  try {
+    const data = await fetchHealthRecords();
+    const userRecords = data.filter((r) => r.userId === currentUserId);
+    const labels = getPast7DaysLabels();
+    const grouped = groupByMetric(userRecords);
 
-    // Fake data ranges per metric
-    const ranges = [
-      [50, 90], // Weight
-      [170, 190], // Height
-      [100, 10000], // Steps
-      [60, 100], // Heart Rate
-      [70, 160], // Blood Sugar
-      [90, 140], // Blood Pressure
-      [4, 9], // Sleep
-      [36, 38], // Temperature
-    ];
-    const [min, max] = ranges[index];
-    const data = Array.from(
-      { length: count },
-      () => +(Math.random() * (max - min) + min).toFixed(1)
-    );
+    let index = 0;
+    for (const metricId in grouped) {
+      const { name, unit, data } = grouped[metricId];
+      const chartData = prepareChartData(data, labels);
 
-    const chartWrapper = document.createElement("div");
-    chartWrapper.classList.add("canvas-container");
+      const chartWrapper = document.createElement("div");
+      chartWrapper.classList.add("canvas-container");
 
-    const chartTitle = document.createElement("h5");
-    chartTitle.textContent = title;
-    chartWrapper.appendChild(chartTitle);
+      const title = document.createElement("h5");
+      title.textContent = `${name} (${unit})`;
+      chartWrapper.appendChild(title);
 
-    const canvas = document.createElement("canvas");
-    chartWrapper.appendChild(canvas);
-    container.appendChild(chartWrapper);
+      const canvas = document.createElement("canvas");
+      chartWrapper.appendChild(canvas);
+      container.appendChild(chartWrapper);
 
-    const ctx = canvas.getContext("2d");
-    new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: title,
-            data: data,
-            backgroundColor: getColor(index),
-            borderRadius: 4,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
+      const ctx = canvas.getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels.map((d) => `Day ${labels.indexOf(d) + 1}`),
+          datasets: [
+            {
+              label: `${name} (${unit})`,
+              data: chartData,
+              backgroundColor: getColor(index),
+              borderColor: getColor(index),
+              fill: false,
+              tension: 0.3,
+            },
+          ],
         },
-        scales: {
-          y: {
-            beginAtZero: true,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: { beginAtZero: false },
           },
         },
-      },
-    });
-  });
+      });
+
+      index++;
+    }
+  } catch (err) {
+    console.error("Chart render error:", err);
+    container.innerHTML = `<p class="error">Failed to load health charts.</p>`;
+  }
 }
 
-document.getElementById("timeFilter").addEventListener("change", function () {
-  renderAllCharts(this.value);
+document.addEventListener("DOMContentLoaded", () => {
+  renderAllCharts();
 });
-
-// Initial render
-renderAllCharts("day");

@@ -1,291 +1,4 @@
-// /**
-//  * Personal Health Tracker - Main JavaScript File
-//  * Bootstrap 5 Enhanced Version
-//  * This file contains all the functionality for the health tracking application
-//  * including data management, chart rendering, and user interactions
-//  */
 
-
-// // ============================================================================
-// // GLOBAL VARIABLES AND CONFIGURATION
-// // ============================================================================
-
-// /**
-//  * Main health data array - stores all user health metrics
-//  * Each entry contains: id, type, value, date, time, notes, timestamp
-//  */
-// let healthData = JSON.parse(localStorage.getItem("healthData")) || []
-
-// /**
-//  * User goals object - stores target values for different health metrics
-//  */
-// let goals = JSON.parse(localStorage.getItem("healthGoals")) || {}
-
-// /**
-//  * Chart instances for main dashboard charts
-//  */
-// let weightChart, heartRateChart
-
-// /**
-//  * Mini chart instances for metric cards
-//  */
-// const miniCharts = {}
-
-// /**
-//  * Chart type toggle - determines whether to show line or bar charts
-//  */
-// const currentChartType = "line"
-
-// /**
-//  * Available health metric types and their configurations
-//  */
-// const METRIC_TYPES = {
-//   weight: {
-//     name: "Weight",
-//     unit: "kg",
-//     icon: "fas fa-weight-scale", // Updated icon
-//     color: "#3498db",
-//     normalRange: { min: 50, max: 100 },
-//   },
-//   height: {
-//     name: "Height",
-//     unit: "cm",
-//     icon: "fas fa-ruler-vertical", // Updated icon
-//     color: "#2ecc71",
-//     normalRange: { min: 150, max: 200 },
-//   },
-//   heartRate: {
-//     name: "Heart Rate",
-//     unit: "bpm",
-//     icon: "fas fa-heartbeat", // Kept same
-//     color: "#e74c3c",
-//     normalRange: { min: 60, max: 100 },
-//   },
-//   bloodPressure: {
-//     name: "Blood Pressure",
-//     unit: "mmHg",
-//     icon: "fas fa-heart-pulse", // Updated icon
-//     color: "#f39c12",
-//     normalRange: { systolic: { min: 90, max: 140 }, diastolic: { min: 60, max: 90 } },
-//   },
-//   bloodSugar: {
-//     name: "Blood Sugar",
-//     unit: "mg/dL",
-//     icon: "fas fa-tint", // Kept same
-//     color: "#9b59b6",
-//     normalRange: { min: 70, max: 140 },
-//   },
-//   steps: {
-//     name: "Steps",
-//     unit: "steps",
-//     icon: "fas fa-shoe-prints", // Updated icon
-//     color: "#1abc9c",
-//     normalRange: { min: 5000, max: 15000 },
-//   },
-//   // Removed temperature and sleep from METRIC_TYPES if not used on dashboard
-//   // temperature: {
-//   //   name: "Body Temperature",
-//   //   unit: "°C",
-//   //   icon: "fas fa-thermometer-half",
-//   //   color: "#e67e22",
-//   //   normalRange: { min: 36, max: 37.5 },
-//   // },
-//   // sleep: {
-//   //   name: "Sleep Hours",
-//   //   unit: "hours",
-//   //   icon: "fas fa-bed",
-//   //   color: "#34495e",
-//   //   normalRange: { min: 6, max: 9 },
-//   // },
-// }
-
-// // ============================================================================
-// // APPLICATION INITIALIZATION
-// // ============================================================================
-
-// /**
-//  * Initialize the application when DOM is loaded
-//  * Sets up event listeners, loads data, and renders initial views
-//  */
-// document.addEventListener("DOMContentLoaded", () => {
-//   console.log("🚀 Initializing Personal Health Tracker...")
-
-//   // Initialize mock data if no existing data
-//   if (healthData.length === 0) {
-//     initializeMockData()
-//   }
-
-//   // Setup application based on current page
-//   initializeApp()
-
-//   console.log("✅ Application initialized successfully")
-// })
-
-// /**
-//  * Main application initialization function
-//  * Coordinates all setup tasks based on the current page
-//  */
-// function initializeApp() {
-//   setupEventListeners()
-//   initializeBootstrapComponents()
-//   setDefaultFormValues() // Always set default form values if form elements exist
-
-//   const path = window.location.pathname
-
-//   if (path.includes("main-page.html") || path === "/") {
-//     updateDashboard()
-//     initializeMiniCharts()
-//   }
-//   //  else if (path.includes("add-dailylog.html")) {
-//   //   // Specific setup for add-daily-log page
-//   //   // setDefaultFormValues() is already called above
-//   // } else if (path.includes("my-dailylogs.html")) {
-//   //   updateHistory()
-//   // } else if (path.includes("add-target.html")) {
-//   //   updateGoals() // Show current goals while setting new ones
-//   // } else if (path.includes("my-targets.html")) {
-//   //   updateGoals()
-//   // }
-// }
-
-// /**
-//  * Initialize Bootstrap components
-//  */
-// function initializeBootstrapComponents() {
-//   // Initialize tooltips
-//   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-//   tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl))
-
-//   // Initialize popovers
-//   const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-//   popoverTriggerList.map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl))
-// }
-
-// /**
-//  * Generate comprehensive mock data for demonstration
-//  * Creates realistic health data spanning the last 30 days
-//  */
-// function initializeMockData() {
-//   console.log(" Generating mock health data...")
-
-//   const mockData = []
-//   const now = new Date()
-
-//   // Generate data for the last 30 days
-//   for (let i = 30; i >= 0; i--) {
-//     const date = new Date(now)
-//     date.setDate(date.getDate() - i)
-
-//     // Weight data (gradual decrease trend)
-//     if (Math.random() > 0.3) {
-//       mockData.push({
-//         id: Date.now() + Math.random() * 1000,
-//         type: "weight",
-//         value: (75 - i * 0.1 + (Math.random() * 2 - 1)).toFixed(1),
-//         date: date.toISOString().split("T")[0],
-//         time: "08:00",
-//         notes: i === 30 ? "Starting weight" : i === 0 ? "Current weight" : "",
-//         timestamp: date.getTime(),
-//       })
-//     }
-
-//     // Height data (stable)
-//     if (i === 30 || i === 15 || i === 0) {
-//       // Less frequent for height
-//       mockData.push({
-//         id: Date.now() + Math.random() * 1000,
-//         type: "height",
-//         value: (175 + Math.random() * 2 - 1).toFixed(1),
-//         date: date.toISOString().split("T")[0],
-//         time: "09:00",
-//         notes: "Height measurement",
-//         timestamp: date.getTime(),
-//       })
-//     }
-
-//     // Steps data (daily)
-//     if (Math.random() > 0.2) {
-//       const steps = 5000 + Math.floor(Math.random() * 8000)
-//       mockData.push({
-//         id: Date.now() + Math.random() * 1000,
-//         type: "steps",
-//         value: steps,
-//         date: date.toISOString().split("T")[0],
-//         time: "23:59",
-//         notes: steps > 10000 ? "Great day!" : steps < 6000 ? "Need more activity" : "",
-//         timestamp: date.getTime(),
-//       })
-//     }
-
-//     // Heart rate data (varies throughout day)
-//     if (Math.random() > 0.4) {
-//       const baseHeartRate = 72
-//       const variation = Math.random() * 20 - 10
-//       mockData.push({
-//         id: Date.now() + Math.random() * 1000,
-//         type: "heartRate",
-//         value: Math.round(baseHeartRate + variation),
-//         date: date.toISOString().split("T")[0],
-//         time: `${8 + Math.floor(Math.random() * 12)}:${Math.floor(Math.random() * 60)
-//           .toString()
-//           .padStart(2, "0")}`,
-//         notes: Math.random() > 0.8 ? "After exercise" : "",
-//         timestamp: date.getTime() + Math.random() * 86400000,
-//       })
-//     }
-
-//     // Blood pressure data (weekly measurements)
-//     if (i % 7 === 0) {
-//       const systolic = 120 + Math.floor(Math.random() * 20 - 10)
-//       const diastolic = 80 + Math.floor(Math.random() * 10 - 5)
-//       mockData.push({
-//         id: Date.now() + Math.random() * 1000,
-//         type: "bloodPressure",
-//         value: `${systolic}/${diastolic}`,
-//         date: date.toISOString().split("T")[0],
-//         time: "09:00",
-//         notes: "Weekly check",
-//         timestamp: date.getTime(),
-//       })
-//     }
-
-//     // Blood sugar data (occasional)
-//     if (Math.random() > 0.6) {
-//       const bloodSugar = 90 + Math.floor(Math.random() * 30 - 15)
-//       mockData.push({
-//         id: Date.now() + Math.random() * 1000,
-//         type: "bloodSugar",
-//         value: bloodSugar,
-//         date: date.toISOString().split("T")[0],
-//         time: "10:00",
-//         notes: bloodSugar > 120 ? "After meal" : "Fasting",
-//         timestamp: date.getTime(),
-//       })
-//     }
-
-//     // Removed temperature and sleep mock data generation
-//     // if (Math.random() > 0.9) { ... }
-//     // if (Math.random() > 0.2) { ... }
-//   }
-
-//   // Sort by timestamp
-//   healthData = mockData.sort((a, b) => a.timestamp - b.timestamp)
-
-//   // Initialize some sample goals
-//   goals = {
-//     weight: 70,
-//     height: 175,
-//     heartRate: 75,
-//     bloodPressure: "120/80",
-//     steps: 10000,
-//     sleep: 8, // Keep sleep goal for now, as it's in add-target.html
-//   }
-
-//   // Save to localStorage
-//   saveData()
-
-//   console.log(` Generated ${healthData.length} mock health records`)
-// }
 
 // ============================================================================
 // NAVIGATION AND VIEW MANAGEMENT (Simplified for multi-page)
@@ -363,7 +76,7 @@ function setupEventListeners() {
  */
 function handleFormSubmit(e) {
   e.preventDefault()
-  console.log("📝 Processing new health metric submission...")
+  console.log(" Processing new health metric submission...")
 
   try {
     // Get form values
@@ -797,225 +510,225 @@ function updateMiniCharts() {
   })
 }
 
-// ============================================================================
-// HISTORY MANAGEMENT
-// ============================================================================
+// // ============================================================================
+// // HISTORY MANAGEMENT
+// // ============================================================================
 
-/**
- * Update the history view with filtered health records
- */
-function updateHistory() {
-  console.log("📋 Updating history...")
+// /**
+//  * Update the history view with filtered health records
+//  */
+// function updateHistory() {
+//   console.log("📋 Updating history...")
 
-  const filter = document.getElementById("historyFilter")?.value || "all"
-  const historyList = document.getElementById("historyList")
+//   const filter = document.getElementById("historyFilter")?.value || "all"
+//   const historyList = document.getElementById("historyList")
 
-  if (!historyList) return
+//   if (!historyList) return
 
-  // Filter data based on selection
-  let filteredData = healthData
-  if (filter !== "all") {
-    filteredData = healthData.filter((entry) => entry.type === filter)
-  }
+//   // Filter data based on selection
+//   let filteredData = healthData
+//   if (filter !== "all") {
+//     filteredData = healthData.filter((entry) => entry.type === filter)
+//   }
 
-  // Sort by timestamp (newest first)
-  filteredData.sort((a, b) => b.timestamp - a.timestamp)
+//   // Sort by timestamp (newest first)
+//   filteredData.sort((a, b) => b.timestamp - a.timestamp)
 
-  // Update header with count
-  const historyHeader = document.querySelector(".history-header h2")
-  if (historyHeader) {
-    const totalCount = filteredData.length
-    historyHeader.textContent = `Health History (${totalCount} ${totalCount === 1 ? "record" : "records"})`
-  }
+//   // Update header with count
+//   const historyHeader = document.querySelector(".history-header h2")
+//   if (historyHeader) {
+//     const totalCount = filteredData.length
+//     historyHeader.textContent = `Health History (${totalCount} ${totalCount === 1 ? "record" : "records"})`
+//   }
 
-  // Handle empty state
-  if (filteredData.length === 0) {
-    historyList.innerHTML = `
-      <div class="empty-state text-center py-5">
-        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
-        <h5 class="text-muted">No health records found</h5>
-        <p class="text-muted">Start tracking your health metrics to see them here</p>
-        <a href="add-dailylog.html" class="btn btn-primary">
-          <i class="fas fa-plus me-2"></i>Add First Entry
-        </a>
-      </div>
-    `
-    return
-  }
+//   // Handle empty state
+//   if (filteredData.length === 0) {
+//     historyList.innerHTML = `
+//       <div class="empty-state text-center py-5">
+//         <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+//         <h5 class="text-muted">No health records found</h5>
+//         <p class="text-muted">Start tracking your health metrics to see them here</p>
+//         <a href="add-dailylog.html" class="btn btn-primary">
+//           <i class="fas fa-plus me-2"></i>Add First Entry
+//         </a>
+//       </div>
+//     `
+//     return
+//   }
 
-  // Limit display for performance (show max 100 items)
-  const displayData = filteredData.slice(0, 100)
+//   // Limit display for performance (show max 100 items)
+//   const displayData = filteredData.slice(0, 100)
 
-  // Generate history HTML with Bootstrap cards
-  historyList.innerHTML = displayData
-    .map((entry) => {
-      const config = METRIC_TYPES[entry.type]
-      const displayName = config ? config.name : entry.type
-      const unit = config ? config.unit : ""
-      const date = new Date(entry.timestamp)
-      const icon = config ? config.icon : "fas fa-chart-line"
-      const color = config ? config.color : "#6c757d"
+//   // Generate history HTML with Bootstrap cards
+//   historyList.innerHTML = displayData
+//     .map((entry) => {
+//       const config = METRIC_TYPES[entry.type]
+//       const displayName = config ? config.name : entry.type
+//       const unit = config ? config.unit : ""
+//       const date = new Date(entry.timestamp)
+//       const icon = config ? config.icon : "fas fa-chart-line"
+//       const color = config ? config.color : "#6c757d"
 
-      return `
-        <div class="card mb-3 history-item" data-id="${entry.id}">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <div class="metric-icon-small" style="background-color: ${color}20; color: ${color};">
-                  <i class="${icon}"></i>
-                </div>
-              </div>
-              <div class="col">
-                <h6 class="card-title mb-1">${displayName}</h6>
-                <p class="card-text text-muted mb-1">
-                  <small>${date.toLocaleDateString()} at ${entry.time}</small>
-                </p>
-                ${entry.notes ? `<p class="card-text"><small class="text-muted fst-italic">${entry.notes}</small></p>` : ""}
-              </div>
-              <div class="col-auto">
-                <span class="badge bg-primary fs-6">${entry.value} ${unit}</span>
-              </div>
-              <div class="col-auto">
-                <button class="btn btn-outline-danger btn-sm" onclick="deleteEntry(${entry.id})" title="Delete entry">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-    })
-    .join("")
+//       return `
+//         <div class="card mb-3 history-item" data-id="${entry.id}">
+//           <div class="card-body">
+//             <div class="row align-items-center">
+//               <div class="col-auto">
+//                 <div class="metric-icon-small" style="background-color: ${color}20; color: ${color};">
+//                   <i class="${icon}"></i>
+//                 </div>
+//               </div>
+//               <div class="col">
+//                 <h6 class="card-title mb-1">${displayName}</h6>
+//                 <p class="card-text text-muted mb-1">
+//                   <small>${date.toLocaleDateString()} at ${entry.time}</small>
+//                 </p>
+//                 ${entry.notes ? `<p class="card-text"><small class="text-muted fst-italic">${entry.notes}</small></p>` : ""}
+//               </div>
+//               <div class="col-auto">
+//                 <span class="badge bg-primary fs-6">${entry.value} ${unit}</span>
+//               </div>
+//               <div class="col-auto">
+//                 <button class="btn btn-outline-danger btn-sm" onclick="deleteEntry(${entry.id})" title="Delete entry">
+//                   <i class="fas fa-trash"></i>
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       `
+//     })
+//     .join("")
 
-  // Show pagination info if needed
-  if (filteredData.length > 100) {
-    historyList.innerHTML += `
-      <div class="alert alert-info text-center">
-        <i class="fas fa-info-circle me-2"></i>
-        Showing latest 100 records out of ${filteredData.length} total records
-      </div>
-    `
-  }
-}
+//   // Show pagination info if needed
+//   if (filteredData.length > 100) {
+//     historyList.innerHTML += `
+//       <div class="alert alert-info text-center">
+//         <i class="fas fa-info-circle me-2"></i>
+//         Showing latest 100 records out of ${filteredData.length} total records
+//       </div>
+//     `
+//   }
+// }
 
-/**
- * Delete a specific health entry
- * @param {number} id - Entry ID to delete
- */
-function deleteEntry(id) {
-  // Show Bootstrap confirmation modal
-  const modalHtml = `
-    <div class="modal fade" id="deleteModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Confirm Delete</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            Are you sure you want to delete this health entry? This action cannot be undone.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger" onclick="confirmDelete(${id})" data-bs-dismiss="modal">Delete</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
+// /**
+//  * Delete a specific health entry
+//  * @param {number} id - Entry ID to delete
+//  */
+// function deleteEntry(id) {
+//   // Show Bootstrap confirmation modal
+//   const modalHtml = `
+//     <div class="modal fade" id="deleteModal" tabindex="-1">
+//       <div class="modal-dialog">
+//         <div class="modal-content">
+//           <div class="modal-header">
+//             <h5 class="modal-title">Confirm Delete</h5>
+//             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+//           </div>
+//           <div class="modal-body">
+//             Are you sure you want to delete this health entry? This action cannot be undone.
+//           </div>
+//           <div class="modal-footer">
+//             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+//             <button type="button" class="btn btn-danger" onclick="confirmDelete(${id})" data-bs-dismiss="modal">Delete</button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   `
 
-  // Add modal to page if not exists
-  if (!document.getElementById("deleteModal")) {
-    document.body.insertAdjacentHTML("beforeend", modalHtml)
-  }
+//   // Add modal to page if not exists
+//   if (!document.getElementById("deleteModal")) {
+//     document.body.insertAdjacentHTML("beforeend", modalHtml)
+//   }
 
-  // Show modal
-  const modal = new bootstrap.Modal(document.getElementById("deleteModal"))
-  modal.show()
-}
+//   // Show modal
+//   const modal = new bootstrap.Modal(document.getElementById("deleteModal"))
+//   modal.show()
+// }
 
-/**
- * Confirm and execute entry deletion
- * @param {number} id - Entry ID to delete
- */
-function confirmDelete(id) {
-  console.log(`🗑️ Deleting entry with ID: ${id}`)
+// /**
+//  * Confirm and execute entry deletion
+//  * @param {number} id - Entry ID to delete
+//  */
+// function confirmDelete(id) {
+//   console.log(`🗑️ Deleting entry with ID: ${id}`)
 
-  // Remove entry from data array
-  const initialLength = healthData.length
-  healthData = healthData.filter((entry) => entry.id !== id)
+//   // Remove entry from data array
+//   const initialLength = healthData.length
+//   healthData = healthData.filter((entry) => entry.id !== id)
 
-  if (healthData.length < initialLength) {
-    saveData()
-    // Update only the relevant view
-    const path = window.location.pathname
-    if (path.includes("main-page.html") || path === "/") {
-      updateDashboard()
-    } else if (path.includes("history.html")) {
-      updateHistory()
-    }
-    updateMiniCharts() // Mini charts are on dashboard, but good to keep this
-    showBootstrapAlert("Entry deleted successfully!", "success")
-  } else {
-    showBootstrapAlert("Entry not found", "danger")
-  }
-}
+//   if (healthData.length < initialLength) {
+//     saveData()
+//     // Update only the relevant view
+//     const path = window.location.pathname
+//     if (path.includes("main-page.html") || path === "/") {
+//       updateDashboard()
+//     } else if (path.includes("history.html")) {
+//       updateHistory()
+//     }
+//     updateMiniCharts() // Mini charts are on dashboard, but good to keep this
+//     showBootstrapAlert("Entry deleted successfully!", "success")
+//   } else {
+//     showBootstrapAlert("Entry not found", "danger")
+//   }
+// }
 
-/**
- * Clear all health history data
- */
-function clearHistory() {
-  // Show Bootstrap confirmation modal
-  const modalHtml = `
-    <div class="modal fade" id="clearHistoryModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Clear All History</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div class="alert alert-warning">
-              <i class="fas fa-exclamation-triangle me-2"></i>
-              <strong>Warning!</strong> This will permanently delete all your health records. This action cannot be undone.
-            </div>
-            Are you sure you want to continue?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger" onclick="confirmClearHistory()" data-bs-dismiss="modal">Clear All</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
+// /**
+//  * Clear all health history data
+//  */
+// function clearHistory() {
+//   // Show Bootstrap confirmation modal
+//   const modalHtml = `
+//     <div class="modal fade" id="clearHistoryModal" tabindex="-1">
+//       <div class="modal-dialog">
+//         <div class="modal-content">
+//           <div class="modal-header">
+//             <h5 class="modal-title">Clear All History</h5>
+//             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+//           </div>
+//           <div class="modal-body">
+//             <div class="alert alert-warning">
+//               <i class="fas fa-exclamation-triangle me-2"></i>
+//               <strong>Warning!</strong> This will permanently delete all your health records. This action cannot be undone.
+//             </div>
+//             Are you sure you want to continue?
+//           </div>
+//           <div class="modal-footer">
+//             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+//             <button type="button" class="btn btn-danger" onclick="confirmClearHistory()" data-bs-dismiss="modal">Clear All</button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   `
 
-  // Add modal to page if not exists
-  if (!document.getElementById("clearHistoryModal")) {
-    document.body.insertAdjacentHTML("beforeend", modalHtml)
-  }
+//   // Add modal to page if not exists
+//   if (!document.getElementById("clearHistoryModal")) {
+//     document.body.insertAdjacentHTML("beforeend", modalHtml)
+//   }
 
-  // Show modal
-  const modal = new bootstrap.Modal(document.getElementById("clearHistoryModal"))
-  modal.show()
-}
+//   // Show modal
+//   const modal = new bootstrap.Modal(document.getElementById("clearHistoryModal"))
+//   modal.show()
+// }
 
-/**
- * Confirm and execute history clearing
- */
-function confirmClearHistory() {
-  console.log("🗑️ Clearing all health history...")
+// /**
+//  * Confirm and execute history clearing
+//  */
+// function confirmClearHistory() {
+//   console.log("🗑️ Clearing all health history...")
 
-  healthData = []
-  saveData()
+//   healthData = []
+//   saveData()
 
-  // Update all displays
-  updateDashboard() // Update dashboard if user navigates back
-  updateHistory() // Update current history page
-  updateMiniCharts()
+//   // Update all displays
+//   updateDashboard() // Update dashboard if user navigates back
+//   updateHistory() // Update current history page
+//   updateMiniCharts()
 
-  showBootstrapAlert("History cleared successfully!", "success")
-}
+//   showBootstrapAlert("History cleared successfully!", "success")
+// }
 
 // ============================================================================
 // GOALS MANAGEMENT
@@ -1687,11 +1400,6 @@ window.showDashboard = showDashboard
 window.showAddMetric = showAddMetric
 window.showHistory = showHistory
 window.showGoals = showGoals
-window.setGoal = setGoal
-window.deleteEntry = deleteEntry
-window.confirmDelete = confirmDelete
-window.clearHistory = clearHistory
-window.confirmClearHistory = confirmClearHistory
 window.showMetricDetails = showMetricDetails
 window.generateReport = generateReport
 window.exportData = exportData
