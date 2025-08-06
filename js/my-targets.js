@@ -1,18 +1,41 @@
 document.addEventListener("DOMContentLoaded", async function () {
-  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("jwtToken");
   const goalList = document.getElementById("goalList");
 
-  if (!userId) {
+  if (!token) {
     goalList.innerHTML = "<p class='text-danger'>User not logged in.</p>";
+    return;
+  }
+
+  // 👇 Decode JWT to extract userId
+  function getUserIdFromToken(token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.userId;
+    } catch (err) {
+      console.error("Failed to parse token", err);
+      return null;
+    }
+  }
+
+  const userId = getUserIdFromToken(token);
+
+  if (!userId) {
+    goalList.innerHTML = "<p class='text-danger'>Invalid token or user ID.</p>";
     return;
   }
 
   console.log("Fetching goals for userId:", userId);
 
   try {
-    const response = await fetch(
-      `http://localhost:8286/api/targets/user/${userId}`
-    );
+    const response = await fetch(`http://localhost:8286/api/targets/user/${userId}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!response.ok) throw new Error("Failed to fetch goals");
 
     const targets = await response.json();
@@ -32,11 +55,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           <h5 class="card-title">${target.title || "Untitled Goal"}</h5>
           <p class="card-text">
             <strong>Target:</strong> ${
-              target.details &&
-              target.details[0] &&
-              target.details[0].targetValue
-                ? target.details[0].targetValue
-                : "N/A"
+              target.details?.[0]?.targetValue ?? "N/A"
             }
             <br>
             <strong>Status:</strong> ${target.status} <br>
@@ -44,19 +63,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             <strong>End Date:</strong> ${target.endDate}
           </p>
           <button class="btn btn-sm btn-outline-primary edit-btn">
-          <i class="fas fa-edit me-1"></i>Edit</button>
+            <i class="fas fa-edit me-1"></i>Edit
+          </button>
           <button class="btn btn-sm btn-outline-danger delete-btn">
-          <i class="fas fa-trash me-1"></i>Delete</button>
+            <i class="fas fa-trash me-1"></i>Delete
+          </button>
         </div>
       `;
 
-      // Handle Edit
+      // Edit button logic
       card.querySelector(".edit-btn").addEventListener("click", () => {
         localStorage.setItem("editTarget", JSON.stringify(target));
-        window.location.href = "add-target.html";
+        window.location.href = "edit-target.html";
       });
 
-      // Handle Delete
+      // Delete button logic
       card.querySelector(".delete-btn").addEventListener("click", async () => {
         if (confirm("Are you sure you want to delete this target?")) {
           try {
@@ -64,11 +85,14 @@ document.addEventListener("DOMContentLoaded", async function () {
               `http://localhost:8286/api/targets/${target.targetId}`,
               {
                 method: "DELETE",
+                headers: {
+                  "Authorization": `Bearer ${token}`,
+                },
               }
             );
             if (!res.ok) throw new Error("Failed to delete");
 
-            card.remove(); // Remove card from UI
+            card.remove(); // Remove from UI
           } catch (err) {
             alert("❌ Failed to delete target.");
             console.error(err);

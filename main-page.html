@@ -1,205 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Personal Health Tracker</title>
-    <link rel="stylesheet" href="css/main-styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap 5 CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="app-container">
-      <!-- Top Header with Contact Info -->
-      <div class="top-header">
-        <div class="contact-info">
-          <span class="phone">0987654321</span>
-          <span class="email">user@example.com</span>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Health Tracker</title>
+  <link rel="stylesheet" href="css/main-styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+
+<body>
+  <div class="app-container">
+    <div class="top-header">
+      <div class="contact-info">
+        <span id="user-phone" class="phone">Đang tải...</span>
+        <span id="user-email" class="email">Đang tải...</span>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <nav class="navbar navbar-expand-lg main-header">
+      <div class="container-fluid header-content">
+        <!-- Logo -->
+        <a class="navbar-brand logo-placeholder" href="main-page.html">
+          <img src="imgs/healthcare_logo(2).png" />
+        </a>
+
+        <!-- Hamburger button -->
+        <button class="navbar-toggler menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+          aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu -->
+<div class="collapse navbar-collapse main-nav" id="mainNav">
+  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    
+    <li class="nav-item">
+      <a class="nav-link nav-btn" href="main-page.html">Home</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link nav-btn" href="records.html">Progress Records</a>
+    </li>
+
+    <!-- My Targets Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
+        <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
+      </ul>
+    </li>
+
+    <!-- Daily Logs Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+        <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
+      </ul>
+    </li>
+
+    <!-- User Account Dropdown (Sửa lại giống các dropdown khác) -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        Hello, <span id="current-user-name">Guest</span>!
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="login.html">Logout</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        
+        <div class="hero-text">
+          <h1>Welcome to Your Health Dashboard</h1>
+          <p>Track your wellness journey with comprehensive health metrics</p>
         </div>
       </div>
+    </section>
 
-      <!-- Main Header -->
-      <nav class="navbar navbar-expand-lg main-header">
-        <div class="container-fluid header-content">
-          <!-- Logo -->
-          <a class="navbar-brand logo-placeholder" href="main-page.html">
-            <img src="imgs/healthcare_logo(2).png" />
-          </a>
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard View (Default) -->
+      <div id="dashboard-view" class="content-view active">
+        <section class="metrics-section">
+          <h2 class="section-title">My metrics</h2>
 
-          <!-- Hamburger button -->
-          <button
-            class="navbar-toggler menu-toggle"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mainNav"
-            aria-controls="mainNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <!-- Menu -->
-          <div class="collapse navbar-collapse main-nav" id="mainNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link nav-btn" href="main-page.html">Home</a>
-              </li>
-
-              <li class="nav-item">
-                <a class="nav-link nav-btn" href="records.html"
-                  >Progress Records</a
-                >
-              </li>
-
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle dropdown-btn"
-                  href="#"
-                  id="targetsDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
-                  <li>
-                    <a class="dropdown-item" href="my-targets.html"
-                      >Show My Targets</a
-                    >
-                  </li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" href="add-target.html"
-                      >Add New Target</a
-                    >
-                  </li>
-                </ul>
-              </li>
-
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle dropdown-btn"
-                  href="#"
-                  id="logsDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="logsDropdown">
-                  <li>
-                    <a class="dropdown-item" href="my-dailylogs.html"
-                      >Show Daily Logs</a
-                    >
-                  </li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" href="add-dailylog.html"
-                      >Add New</a
-                    >
-                  </li>
-                </ul>
-              </li>
-
-              <!-- User Account Dropdown -->
-              <div class="nav-item dropdown">
-                <button
-                  class="nav-btn dropdown-btn"
-                  type="button"
-                  id="userAccountDropdown"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Hello, <span id="current-user-name">Guest</span>!
-                  <i class="fas fa-chevron-down dropdown-icon"></i>
-                </button>
-                <ul
-                  class="dropdown-menu dropdown-menu-end"
-                  aria-labelledby="userAccountDropdown"
-                >
-                  <li>
-                    <a class="dropdown-item" href="#" 
-                      >Settings</a
-                    >
-                  </li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a
-                      class="dropdown-item"
-                      href="login.html"
-                      
-                      >Logout</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </ul>
+          <div class="metrics-grid" id="metricsContainer">
+            <!-- JS sẽ render các metric-card vào đây -->
           </div>
-        </div>
-      </nav>
-
-      <!-- Hero Section -->
-      <section class="hero-section">
-        <div class="hero-content">
-          <div class="hero-graphics">
-            <div class="hero-shape-1"></div>
-            <div class="hero-shape-2"></div>
-          </div>
-          <div class="hero-text">
-            <h1>Welcome to Your Health Dashboard</h1>
-            <p>Track your wellness journey with comprehensive health metrics</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Main Content -->
-      <main class="main-content">
-        <!-- Dashboard View (Default) -->
-        <div id="dashboard-view" class="content-view active">
-          <section class="metrics-section">
-            <h2 class="section-title">My metrics</h2>
-
-            <div class="metrics-grid" id="metricsContainer">
-              <!-- JS sẽ render các metric-card vào đây -->
-            </div>
-            <div
-              id="noDataMessage"
-              style="
+          <div id="noDataMessage" style="
                 display: none;
                 text-align: center;
                 color: gray;
                 margin-top: 1rem;
-              "
-            >
-              No data available.
-            </div>
-          </section>
+              ">
+            No data available.
+          </div>
+        </section>
 
-          <!-- Quick Actions -->
-          <section class="quick-actions">
-            <button class="action-btn secondary" onclick="showHistory()">
-              <i class="fas fa-history"></i>
-              View Daily Logs
-            </button>
-            <button class="action-btn secondary" onclick="showGoals()">
-              <i class="fas fa-target"></i>
-              Manage Goals
-            </button>
-          </section>
-        </div>
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+          <button class="action-btn secondary" onclick="showHistory()">
+            <i class="fas fa-history"></i>
+            View Daily Logs
+          </button>
+          <button class="action-btn secondary" onclick="showGoals()">
+            <i class="fas fa-target"></i>
+            Manage Goals
+          </button>
+        </section>
+      </div>
 
-      </main>     
+    </main>
     <!-- Footer -->
     <footer class="app-footer">
       <div class="footer-container">
@@ -218,32 +154,110 @@
     <!-- Bootstrap JS (gồm Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("metricsContainer");
-    const noDataMessage = document.getElementById("noDataMessage");
+      // Hàm để lấy và hiển thị thông tin người dùng hiện tại
+      async function loadCurrentUserData(token) {
+        // Tìm các element trên trang
+        const userNameEl = document.getElementById("current-user-name");
+        const userPhoneEl = document.getElementById("user-phone");
+        const userEmailEl = document.getElementById("user-email");
 
-    fetch("http://127.0.0.1:8286/api/healthrecords")
-      .then((res) => res.json())
-      .then((records) => {
-        container.innerHTML = "";
+        if (!token) {
+          userNameEl.textContent = "Guest";
+          userPhoneEl.textContent = "N/A";
+          userEmailEl.textContent = "N/A";
+          return;
+        }
 
-        if (!records || records.length === 0) {
+        try {
+          const res = await fetch('http://127.0.0.1:8286/api/users/me', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          });
+
+          if (!res.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+
+          const user = await res.json();
+
+          // Cập nhật giao diện với dữ liệu thật
+          // Giả sử đối tượng 'user' trả về có các trường: fullName, phone, email
+          userNameEl.textContent = user.fullName || "User";
+          userPhoneEl.textContent = user.phoneNumber || "Chưa có SĐT";
+          userEmailEl.textContent = user.email || "Chưa có email";
+
+        } catch (err) {
+          console.error("Error loading user data:", err);
+          userNameEl.textContent = "Error";
+          userPhoneEl.textContent = "Error";
+          userEmailEl.textContent = "Error";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const container = document.getElementById("metricsContainer");
+        const noDataMessage = document.getElementById("noDataMessage");
+
+        // Lấy userId từ JWT
+        function getUserIdFromToken(token) {
+          if (!token) return null;
+          try {
+            const payloadBase64 = token.split('.')[1];
+            const payload = JSON.parse(atob(payloadBase64));
+            return payload.userId; // Tùy JWT backend mà có thể là userId, sub hoặc id
+          } catch (err) {
+            console.error("Invalid token format", err);
+            return null;
+          }
+        }
+
+        const token = localStorage.getItem("jwtToken"); // Chỉ dùng 1 key nhất quán
+        const userId = getUserIdFromToken(token);
+
+        await loadCurrentUserData(token);
+
+
+        if (!userId || !token) {
+          console.error("⚠️ No valid user ID or token found.");
+          noDataMessage.textContent = "⚠️ User not logged in.";
           noDataMessage.style.display = "block";
           return;
         }
 
-        noDataMessage.style.display = "none";
+        try {
+          const res = await fetch(`http://127.0.0.1:8286/api/healthrecords/user/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          });
 
-        records.forEach((record) => {
-          const name = record.metricName || "Unknown";
-          const value = record.value ?? "No data";
-          const unit = record.unit || "";
-          const date = record.logDate || "No date";
+          const records = await res.json();
+          container.innerHTML = "";
 
-          // Optional: bạn có thể tự tính trend nếu muốn
-          const trendSymbol = "-";
-          const trendColor = "gray";
+          if (!records || records.length === 0) {
+            noDataMessage.textContent = "📭 No records found.";
+            noDataMessage.style.display = "block";
+            return;
+          }
 
+          // Lọc dữ liệu theo ngày hôm nay
+          const todayStr = new Date().toISOString().split('T')[0];
+          const todayRecords = records.filter(record =>
+            record.logDate && record.logDate.startsWith(todayStr)
+          );
+
+          if (todayRecords.length === 0) {
+            noDataMessage.textContent = "📆 No health data for today.";
+            noDataMessage.style.display = "block";
+            return;
+          }
+
+          noDataMessage.style.display = "none";
+
+          // Map icon cho từng loại metric
           const iconMap = {
             "Weight": "fa-weight-scale",
             "Height": "fa-ruler-vertical",
@@ -253,38 +267,44 @@
             "Blood Sugar": "fa-tint",
             "Sleep": "fa-bed"
           };
-          const iconClass = iconMap[name] || "fa-question-circle";
 
-          const card = document.createElement("div");
-          card.className = "metric-card";
-          card.innerHTML = `
-            <div class="metric-icon">
-              <i class="fas ${iconClass}"></i>
+          todayRecords.forEach((record) => {
+            const name = record.metricName || "Unknown";
+            const value = record.value ?? "No data";
+            const unit = record.unit || "";
+            const date = record.logDate || "No date";
+
+            const iconClass = iconMap[name] || "fa-question-circle";
+
+            const card = document.createElement("div");
+            card.className = "metric-card";
+            card.innerHTML = `
+          <div class="metric-icon">
+            <i class="fas ${iconClass}"></i>
+          </div>
+          <div class="metric-info">
+            <h3>${name}</h3>
+            <div class="metric-value">${value} ${unit}</div>
+            <div class="metric-details">
+              <span class="last-updated">${date}</span>
+              <span class="metric-trend" style="color: gray">-</span>
             </div>
-            <div class="metric-info">
-              <h3>${name}</h3>
-              <div class="metric-value">${value} ${unit}</div>
-              <div class="metric-details">
-                <span class="last-updated">${date}</span>
-                <span class="metric-trend" style="color: ${trendColor}">${trendSymbol}</span>
-              </div>
-            </div>
-            <div class="metric-chart">
-              <canvas id="${name.replace(/\s+/g, '')}MiniChart"></canvas>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      })
-      .catch((err) => {
-        console.error("Fetch error:", err);
-        container.innerHTML = "";
-        noDataMessage.style.display = "block";
+          </div>
+          <div class="metric-chart">
+            <canvas id="${name.replace(/\s+/g, '')}MiniChart"></canvas>
+          </div>
+        `;
+            container.appendChild(card);
+          });
+
+        } catch (err) {
+          console.error("Fetch error:", err);
+          container.innerHTML = "";
+          noDataMessage.textContent = "❌ Failed to load health data.";
+          noDataMessage.style.display = "block";
+        }
       });
-  });
-</script>
+    </script>
+</body>
 
-
-
-  </body>
 </html>

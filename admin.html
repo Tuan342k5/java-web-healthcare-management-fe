@@ -194,10 +194,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Kiểm tra đăng nhập
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn !== 'true') {
-                window.location.href = 'login.html';
-            }
+            
 
             // Hiển thị tên người dùng
             const currentUserName = localStorage.getItem('currentUser') || 'Admin';

@@ -20,10 +20,10 @@
     <div class="app-container">
       <!-- Top Header with Contact Info -->
       <div class="top-header">
-        <div class="contact-info">
-          <span class="phone">0987654321</span>
-          <span class="email">user@example.com</span>
-        </div>
+          <div class="contact-info">
+        <span id="user-phone" class="phone">Đang tải...</span>
+        <span id="user-email" class="email">Đang tải...</span>
+          </div>
       </div>
 
       <!-- Main Header -->
@@ -48,74 +48,58 @@
           </button>
 
           <!-- Menu -->
-          <div class="collapse navbar-collapse main-nav" id="mainNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link nav-btn" href="main-page.html">Home</a>
-              </li>
+<div class="collapse navbar-collapse main-nav" id="mainNav">
+  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    
+    <li class="nav-item">
+      <a class="nav-link nav-btn" href="main-page.html">Home</a>
+    </li>
 
-              <li class="nav-item">
-                <a class="nav-link nav-btn" href="records.html"
-                  >Progress Records</a
-                >
-              </li>
+    <li class="nav-item">
+      <a class="nav-link nav-btn" href="records.html">Progress Records</a>
+    </li>
 
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle dropdown-btn"
-                  href="#"
-                  id="targetsDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
-                  <li>
-                    <a class="dropdown-item" href="my-targets.html"
-                      >Show My Targets</a
-                    >
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="add-target.html"
-                      >Add New Target</a
-                    >
-                  </li>
-                </ul>
-              </li>
+    <!-- My Targets Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
+        <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
+      </ul>
+    </li>
 
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle dropdown-btn"
-                  href="#"
-                  id="logsDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="logsDropdown">
-                  <li>
-                    <a class="dropdown-item" href="my-dailylogs.html"
-                      >Show Daily Logs</a
-                    >
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="add-dailylog.html"
-                      >Add New</a
-                    >
-                  </li>
-                </ul>
-              </li>
+    <!-- Daily Logs Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+        <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
+      </ul>
+    </li>
 
-              <li class="nav-item">
-                <a class="nav-link logout-btn" href="login.html">Logout</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+    <!-- User Account Dropdown (Sửa lại giống các dropdown khác) -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        Hello, <span id="current-user-name">Guest</span>!
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="login.html">Logout</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</div>
       </nav>
 
       <!-- Hero Section -->
@@ -134,95 +118,88 @@
 
       <!-- Main Content -->
       <main class="main-content">
-        <!-- Goals View (for setting goals) -->
-        <div id="add-goal-view" class="content-view active">
-          <div class="form-container">
-            <h2>Set New Health Goal</h2>
-            <form id="goalForm">
-              <div class="form-group">
-                <label for="goalMetricType">Indicator (Metric Type)</label>
-                <select id="goalMetricType" required>
-                  <option value="">Loading metric types...</option>
-                </select>
-              </div>
+<div class="form-container">
+  <h2>Add New Target</h2>
+  <form id="goalForm">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" required />
+    </div>
 
-              <div class="form-group" id="goalValueGroup">
-                <label for="goalValue">Target Value</label>
-                <input type="number" id="goalValue" step="0.1" required />
-                <small
-                  class="form-text text-muted"
-                  id="goalUnitDisplay"
-                ></small>
-              </div>
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" required>
+        <option value="">Select Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
 
-              <div
-                class="form-group"
-                id="goalBloodPressureGroup"
-                style="display: none"
-              >
-                <label for="goalSystolic">Target Systolic</label>
-                <input type="number" id="goalSystolic" min="70" max="200" />
-                <label for="goalDiastolic">Target Diastolic</label>
-                <input type="number" id="goalDiastolic" min="40" max="120" />
-                <small class="form-text text-muted">mmHg</small>
-              </div>
+    <div class="form-group">
+      <label for="startDate">Start Date</label>
+      <input type="date" id="startDate" required />
+    </div>
 
-              <div class="form-group">
-                <label for="comparisonType">Comparison Type</label>
-                <select id="comparisonType" required>
-                  <option value="lessThan">Less Than (<)</option>
-                  <option value="greaterThan">Greater Than (>)</option>
-                  <option value="equalTo">Equal To (=)</option>
-                  <option value="range">Within Range</option>
-                </select>
-              </div>
+    <div class="form-group">
+      <label for="endDate">End Date</label>
+      <input type="date" id="endDate" required />
+    </div>
 
-              <div
-                class="form-group"
-                id="rangeMinMaxGroup"
-                style="display: none"
-              >
-                <label for="rangeMin">Min Value</label>
-                <input type="number" id="rangeMin" step="0.1" />
-                <label for="rangeMax">Max Value</label>
-                <input type="number" id="rangeMax" step="0.1" />
-              </div>
+    <hr />
+    <strong>📌 Target Detail:</strong>
 
-              <div class="form-group">
-                <label for="statisticsType">Statistics Type</label>
-                <select id="statisticsType" required>
-                  <option value="latest">Latest Reading</option>
-                  <option value="average">Average of Readings</option>
-                </select>
-              </div>
+    <div class="form-group">
+      <label for="metricId">Metric Type</label>
+      <select id="metricId" required>
+        <option value="">Select Metric</option>
+        <option value="1">Weight</option>
+        <option value="2">Height</option>
+        <option value="3">Steps</option>
+        <option value="4">Heart Rate</option>
+        <option value="5">Blood Pressure</option>
+        <option value="6">Exercise Time</option>
+        <option value="7">Blood Sugar</option>
+        <option value="8">Sleep Duration</option>
+      </select>
+    </div>
 
-              <div class="form-group">
-                <label for="targetDate">Target Date</label>
-                <input type="date" id="targetDate" required />
-              </div>
+    <div class="form-group">
+      <label for="comparisonType">Comparison Type</label>
+      <select id="comparisonType" required>
+        <option value=">">Greater Than (&gt;)</option>
+        <option value="<">Less Than (&lt;)</option>
+        <option value=">=">Greater or Equal (&ge;)</option>
+        <option value="<=">Less or Equal (&le;)</option>
+        <option value="=">Equal (=)</option>
+      </select>
+    </div>
 
-              <div class="form-group">
-                <label for="goalNotes">Notes (Optional)</label>
-                <textarea
-                  id="goalNotes"
-                  rows="3"
-                  placeholder="Any additional notes about this goal..."
-                ></textarea>
-              </div>
+    <div class="form-group">
+      <label for="targetValue">Target Value</label>
+      <input type="number" id="targetValue" step="0.1" required />
+    </div>
 
-              <div class="form-actions">
-                <button
-                  type="button"
-                  class="btn-secondary"
-                  onclick="window.location.href='main-page.html'"
-                >
-                  Cancel
-                </button>
-                <button type="submit" class="btn-primary">Set Goal</button>
-              </div>
-            </form>
-          </div>
-        </div>
+    <div class="form-group">
+      <label for="aggregationType">Aggregation Type</label>
+      <select id="aggregationType" required>
+        <option value="daily">Daily</option>
+        <option value="last">Last</option>
+        <option value="sum">Sum</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="window.location.href='main-page.html'">
+        Cancel
+      </button>
+      <button id="submitBtn" type="submit">Tạo mới</button>
+    </div>
+  </form>
+</div>
+
       </main>
 
       <!-- Footer with Action Buttons -->
@@ -272,7 +249,16 @@
       </footer>
     </div>
     <script src="js/add-target.js"></script>
+<script type="module">
+  import { loadCurrentUserData } from './js/user-info.js';
 
+  document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("jwtToken");
+    await loadCurrentUserData(token);
+
+    // Có thể tiếp tục xử lý thêm ở đây...
+  });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

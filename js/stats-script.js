@@ -1,13 +1,39 @@
-const currentUserId = 1; // 👉 thay bằng userId hiện tại
+// ✅ Hàm giải mã JWT để lấy userId
+function parseJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = decodeURIComponent(atob(base64Url).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(base64);
+  } catch (e) {
+    console.error("Token decode error:", e);
+    return null;
+  }
+}
 
+// ✅ Gọi API với userId từ token
 async function fetchHealthRecords() {
-  const res = await fetch(
-    `http://localhost:8286/api/healthrecords/user/${currentUserId}`
-  );
+  const token = localStorage.getItem("jwtToken");
+  if (!token) throw new Error("JWT token not found");
+
+  const decoded = parseJwt(token);
+  const userId = decoded?.userId;
+
+  if (!userId) throw new Error("User ID not found in token");
+
+  const res = await fetch(`http://localhost:8286/api/healthrecords/user/${userId}`, {
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+
   if (!res.ok) throw new Error("Failed to fetch data");
   return await res.json();
 }
 
+// ✅ Nhóm dữ liệu theo metric
 function groupByMetric(records) {
   const grouped = {};
   records.forEach((r) => {
@@ -20,23 +46,29 @@ function groupByMetric(records) {
     }
     grouped[r.metricId].data.push({
       date: r.logDate,
-      value: r.value,
+      value: parseFloat(r.value),
     });
   });
   return grouped;
 }
 
-function getPast7DaysLabels() {
+// ✅ Tạo mảng 7 ngày trong tuần dựa trên ngày được chọn
+function getWeekLabels(selectedDateStr) {
+  const selectedDate = new Date(selectedDateStr);
+  const dayOfWeek = selectedDate.getDay(); // 0 = CN
+  const start = new Date(selectedDate);
+  start.setDate(selectedDate.getDate() - dayOfWeek);
+
   const labels = [];
-  const today = new Date();
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
     labels.push(d.toISOString().split("T")[0]);
   }
   return labels;
 }
 
+// ✅ Chuẩn hóa dữ liệu theo labels (ngày trong tuần)
 function prepareChartData(metricData, labels) {
   const valueMap = {};
   metricData.forEach((entry) => {
@@ -45,33 +77,34 @@ function prepareChartData(metricData, labels) {
   return labels.map((date) => valueMap[date] || null);
 }
 
+// ✅ Màu sắc cho các biểu đồ
 function getColor(index) {
-  const colors = [
-    "#4BC0C0",
-    "#FF6384",
-    "#FFCE56",
-    "#36A2EB",
-    "#9966FF",
-    "#8BC34A",
-    "#FF9F40",
-  ];
+  const colors = ["#4BC0C0", "#FF6384", "#FFCE56", "#36A2EB", "#9966FF", "#8BC34A", "#FF9F40"];
   return colors[index % colors.length];
 }
 
-async function renderAllCharts() {
+// ✅ Vẽ toàn bộ biểu đồ theo tuần
+async function renderAllCharts(selectedDateStr) {
   const container = document.getElementById("chartsContainer");
   container.innerHTML = "";
 
   try {
-    const data = await fetchHealthRecords();
-    const userRecords = data.filter((r) => r.userId === currentUserId);
-    const labels = getPast7DaysLabels();
-    const grouped = groupByMetric(userRecords);
+    const records = await fetchHealthRecords();
+    console.log("📥 Raw records:", records);
+
+    const labels = getWeekLabels(selectedDateStr);
+    console.log("📅 Week labels:", labels);
+
+    const grouped = groupByMetric(records);
+    console.log("📊 Grouped by metric:", grouped);
 
     let index = 0;
     for (const metricId in grouped) {
       const { name, unit, data } = grouped[metricId];
       const chartData = prepareChartData(data, labels);
+
+      console.log(`📈 Metric ${name} (${unit}) - Raw data:`, data);
+      console.log(`🔢 Chart data (${name}):`, chartData);
 
       const chartWrapper = document.createElement("div");
       chartWrapper.classList.add("canvas-container");
@@ -88,7 +121,7 @@ async function renderAllCharts() {
       new Chart(ctx, {
         type: "line",
         data: {
-          labels: labels.map((d) => `Day ${labels.indexOf(d) + 1}`),
+          labels: labels,
           datasets: [
             {
               label: `${name} (${unit})`,
@@ -115,10 +148,17 @@ async function renderAllCharts() {
     }
   } catch (err) {
     console.error("Chart render error:", err);
-    container.innerHTML = `<p class="error">Failed to load health charts.</p>`;
+    container.innerHTML = `<p class="error">⚠️ Failed to load health charts.</p>`;
   }
 }
 
+// ✅ Khởi động khi DOM sẵn sàng
 document.addEventListener("DOMContentLoaded", () => {
-  renderAllCharts();
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("selectedDate").value = today;
+  renderAllCharts(today);
+
+  document.getElementById("selectedDate").addEventListener("change", (e) => {
+    renderAllCharts(e.target.value);
+  });
 });

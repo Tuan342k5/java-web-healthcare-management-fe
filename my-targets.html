@@ -20,10 +20,10 @@
     <div class="app-container">
       <!-- Top Header with Contact Info -->
       <div class="top-header">
-        <div class="contact-info">
-          <span class="phone">0987654321</span>
-          <span class="email">user@example.com</span>
-        </div>
+          <div class="contact-info">
+        <span id="user-phone" class="phone">Đang tải...</span>
+        <span id="user-email" class="email">Đang tải...</span>
+          </div>
       </div>
 
       <!-- Main Header -->
@@ -48,74 +48,58 @@
           </button>
 
           <!-- Menu -->
-          <div class="collapse navbar-collapse main-nav" id="mainNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link nav-btn" href="main-page.html">Home</a>
-              </li>
+<div class="collapse navbar-collapse main-nav" id="mainNav">
+  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    
+    <li class="nav-item">
+      <a class="nav-link nav-btn" href="main-page.html">Home</a>
+    </li>
 
-              <li class="nav-item">
-                <a class="nav-link nav-btn" href="records.html"
-                  >Progress Records</a
-                >
-              </li>
+    <li class="nav-item">
+      <a class="nav-link nav-btn" href="records.html">Progress Records</a>
+    </li>
 
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle dropdown-btn"
-                  href="#"
-                  id="targetsDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
-                  <li>
-                    <a class="dropdown-item" href="my-targets.html"
-                      >Show My Targets</a
-                    >
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="add-target.html"
-                      >Add New Target</a
-                    >
-                  </li>
-                </ul>
-              </li>
+    <!-- My Targets Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
+        <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
+      </ul>
+    </li>
 
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle dropdown-btn"
-                  href="#"
-                  id="logsDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="logsDropdown">
-                  <li>
-                    <a class="dropdown-item" href="my-dailylogs.html"
-                      >Show Daily Logs</a
-                    >
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="add-dailylog.html"
-                      >Add New</a
-                    >
-                  </li>
-                </ul>
-              </li>
+    <!-- Daily Logs Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+        <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
+      </ul>
+    </li>
 
-              <li class="nav-item">
-                <a class="nav-link logout-btn" href="login.html">Logout</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+    <!-- User Account Dropdown (Sửa lại giống các dropdown khác) -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button"
+         data-bs-toggle="dropdown" aria-expanded="false">
+        Hello, <span id="current-user-name">Guest</span>!
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="login.html">Logout</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</div>
       </nav>
 
       <!-- Hero Section -->
@@ -198,6 +182,16 @@
 
     <script src="js/my-targets.js"></script>
     <script src="js/main-script.js"></script>
+    <script type="module">
+  import { loadCurrentUserData } from './js/user-info.js';
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("jwtToken");
+    await loadCurrentUserData(token);
+
+    // Có thể tiếp tục xử lý thêm ở đây...
+  });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

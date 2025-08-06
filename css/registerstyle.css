@@ -1,0 +1,139 @@
+/* Thiết lập chung cho toàn trang */
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Dùng min-height để form không bị cắt khi mở bàn phím ảo */
+    margin: 0;
+    padding: 20px 0;
+}
+
+/* Container chính bao quanh form */
+.register-container {
+    background-color: white;
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px; /* Tăng độ rộng cho vừa các trường mới */
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    color: #1c1e21;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #606770;
+}
+
+/* Style chung cho các input, select */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    font-family: inherit; /* Giữ font chữ đồng nhất */
+    color: #1c1e21;
+}
+
+/* CSS cho placeholder của date input */
+input[type="date"]:invalid {
+    color: #888;
+}
+
+input:focus,
+select:focus {
+    border-color: #1877f2;
+    outline: none;
+    box-shadow: 0 0 0 2px #e7f3ff;
+}
+
+/* ----- CSS cho icon mắt hiện/ẩn mật khẩu ----- */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 40px; /* Tạo khoảng trống bên phải cho icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    color: #888;
+}
+/* ------------------------------------------ */
+
+
+button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #1877f2;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+}
+
+button:hover {
+    background-color: #166fe5;
+}
+
+button:disabled {
+    background-color: #9cbce0;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: #fa383e;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    min-height: 1.2em;
+}
+
+.links {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.links span {
+    color: #606770;
+}
+
+.links a {
+    color: #1877f2;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,123 @@
+/* Thiết lập chung cho toàn trang */
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5; /* Một màu nền nhẹ nhàng */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Container chính bao quanh form */
+.login-container {
+    background-color: white;
+    padding: 2rem 3rem; /* Tăng padding để rộng rãi hơn */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+/* Tiêu đề "Đăng Nhập" */
+h1 {
+    text-align: center;
+    color: #1c1e21;
+    margin-bottom: 1.5rem;
+}
+
+/* Nhóm chứa label và input */
+.input-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #606770;
+}
+
+/* Định dạng cho các ô input */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Quan trọng để padding không làm thay đổi width */
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #1877f2; /* Màu xanh dương khi focus */
+    outline: none;
+    box-shadow: 0 0 0 2px #e7f3ff;
+}
+
+/* Nút Đăng Nhập */
+button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #1877f2; /* Màu xanh của Facebook */
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #166fe5; /* Đậm hơn một chút khi hover */
+}
+
+/* Vô hiệu hóa nút */
+button:disabled {
+    background-color: #9cbce0;
+    cursor: not-allowed;
+}
+
+/* Khu vực hiển thị thông báo lỗi */
+.error-message {
+    color: #fa383e; /* Màu đỏ cho lỗi */
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    min-height: 1.2em; /* Giữ khoảng trống để layout không bị giật khi lỗi xuất hiện */
+}
+
+/* ---- Đoạn CSS mới, đã sửa lỗi dính nhau ---- */
+
+.links {
+    display: flex;
+    justify-content: center; /* Căn giữa cả cụm liên kết */
+    align-items: center;
+    flex-wrap: wrap; /* Cho phép xuống dòng nếu màn hình quá nhỏ */
+    gap: 15px; /* Quan trọng: Tạo khoảng cách 15px giữa các mục */
+    margin-top: 1.5rem;
+}
+
+.links a {
+    color: #1877f2;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* Áp dụng cho cấu trúc HTML được khuyến nghị */
+.register-link {
+    display: inline-flex; /* Giúp "Chưa có tài khoản?" và "Đăng ký" liền nhau */
+    align-items: center;
+    gap: 5px; /* Khoảng cách nhỏ giữa chữ và link Đăng ký */
+}
+
+.register-link span {
+    color: #606770; /* Màu chữ xám cho thân thiện hơn */
+}
