@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       card.innerHTML = `
         <div class="card-body">
-          <h5 class="card-title">${target.title || "Untitled Goal"}</h5>
+          <h5 class="card-title" style="color: red;">${target.title || "Untitled Goal"}</h5>
           <p class="card-text">
             <strong>Target:</strong> ${
               target.details?.[0]?.targetValue ?? "N/A"
