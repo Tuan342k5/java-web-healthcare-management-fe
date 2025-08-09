@@ -123,11 +123,9 @@
                   <form id="dailyLogForm">
                        <div class="form-group d-flex align-items-center">
                         <label for="logDate" class="me-2 mb-0">Date</label>
-                        <input type="date" id="logDate" class="form-control" required>
+                        <input type="date" id="logDate" name="logDate" class="form-control" required>
                       </div>  
-
                       <hr class="my-4">
-
                       <div class="row">
                           <div class="col-md-6">
                               <div class="form-group">
@@ -216,79 +214,145 @@
     </footer>
   </div>
 <script>
-  function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  ).join(''));
+  return JSON.parse(jsonPayload);
+}
+
+let isUpdateMode = false; // Cờ xác định insert hay update
+
+const token = localStorage.getItem("jwtToken");
+if (!token) {
+  alert("Bạn chưa đăng nhập!");
+  window.location.href = "login.html";
+}
+const payload = parseJwt(token);
+const userId = payload.userId || payload.id || payload.sub;
+
+// 1️⃣ Lắng nghe khi chọn ngày
+document.getElementById("logDate").addEventListener("change", async function () {
+  const date = this.value;
+  if (!date) return;
+
+  try {
+    const res = await fetch(`http://localhost:8286/api/healthrecords/user/${userId}/log/${date}`, {
+      method: "GET",
+      headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.metrics) {
+        // Có dữ liệu → Fill form
+        document.getElementById("notes").value = data.notes || "";
+        document.getElementById("weightValue").value = getMetricValue(data.metrics, 1);
+        document.getElementById("heightValue").value = getMetricValue(data.metrics, 2);
+        document.getElementById("stepsValue").value = getMetricValue(data.metrics, 3);
+        document.getElementById("heartRateValue").value = getMetricValue(data.metrics, 4);
+        document.getElementById("bloodPressure").value = getMetricValue(data.metrics, 5);
+        document.getElementById("exerciseTime").value = getMetricValue(data.metrics, 6);
+        document.getElementById("bloodSugarValue").value = getMetricValue(data.metrics, 7);
+        document.getElementById("sleepValue").value = getMetricValue(data.metrics, 8);
+
+        isUpdateMode = true;
+        document.getElementById("submitBtn").textContent = "Update";
+      } else {
+        // Không có dữ liệu → Reset form
+        resetForm();
+        isUpdateMode = false;
+        document.getElementById("submitBtn").textContent = "Add";
+      }
+    } else {
+      resetForm();
+      isUpdateMode = false;
+      document.getElementById("submitBtn").textContent = "Add";
+    }
+  } catch (err) {
+    console.error("Lỗi khi check dữ liệu:", err);
+  }
+});
+
+function getMetricValue(metrics, metricId) {
+  const m = metrics.find(item => item.metricId === metricId);
+  return m ? m.value : "";
+}
+
+function resetForm() {
+  document.getElementById("notes").value = "";
+  document.getElementById("weightValue").value = "";
+  document.getElementById("heightValue").value = "";
+  document.getElementById("stepsValue").value = "";
+  document.getElementById("heartRateValue").value = "";
+  document.getElementById("bloodPressure").value = "";
+  document.getElementById("exerciseTime").value = "";
+  document.getElementById("bloodSugarValue").value = "";
+  document.getElementById("sleepValue").value = "";
+}
+
+// 2️⃣ Submit form
+document.getElementById("dailyLogForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const date = document.getElementById("logDate").value;
+  const notes = document.getElementById("notes").value;
+
+  const metrics = [
+    { metricId: 1, value: document.getElementById("weightValue").value },
+    { metricId: 2, value: document.getElementById("heightValue").value },
+    { metricId: 3, value: document.getElementById("stepsValue").value },
+    { metricId: 4, value: document.getElementById("heartRateValue").value },
+    { metricId: 5, value: document.getElementById("bloodPressure").value },
+    { metricId: 6, value: document.getElementById("exerciseTime").value },
+    { metricId: 7, value: document.getElementById("bloodSugarValue").value },
+    { metricId: 8, value: document.getElementById("sleepValue").value }
+  ].filter(m => m.value); // Bỏ rỗng
+
+  if (metrics.length === 0) {
+    alert("Vui lòng nhập ít nhất một thông tin!");
+    return;
   }
 
-  document.getElementById("dailyLogForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
+  const payloadBody = {
+    userId,
+    date,
+    notes,
+    metrics
+  };
 
-    const date = document.getElementById("logDate").value;
-    const notes = document.getElementById("notes").value;
+  try {
+    const url = isUpdateMode
+      ? "http://localhost:8286/api/healthrecords/by-user-date"
+      : "http://localhost:8286/api/healthrecords";
 
-    // Lấy token từ localStorage
-    const token = localStorage.getItem("jwtToken");
+    const method = isUpdateMode ? "PUT" : "POST";
 
-    // Kiểm tra nếu chưa đăng nhập thì chuyển về login.html
-    if (!token) {
-      alert("Bạn chưa đăng nhập!");
-      window.location.href = "login.html";
-      return;
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(payloadBody)
+    });
+
+    if (response.ok) {
+      alert(isUpdateMode ? "Cập nhật thành công!" : "Thêm mới thành công!");
+      window.location.href = "my-dailylogs.html";
+    } else {
+      const errorText = await response.text();
+      alert("Lỗi: " + errorText);
     }
-
-    // Parse token để lấy userId
-    const payload = parseJwt(token);
-    const userId = payload.userId || payload.id || payload.sub;
-
-    console.log("User ID từ JWT Token:", userId); // ✅ In ra userId
-
-    const metrics = [
-      { metricId: 1, value: document.getElementById("weightValue").value },
-      { metricId: 2, value: document.getElementById("heightValue").value },
-      { metricId: 3, value: document.getElementById("stepsValue").value },
-      { metricId: 4, value: document.getElementById("heartRateValue").value },
-      { metricId: 5, value: document.getElementById("bloodPressure").value },
-      { metricId: 6, value: document.getElementById("exerciseTime").value },
-      { metricId: 7, value: document.getElementById("bloodSugarValue").value },
-      { metricId: 8, value: document.getElementById("sleepValue").value }
-    ].filter(metric => metric.value);
-
-    const payloadBody = {
-      userId: userId,
-      date: date,
-      notes: notes,
-      metrics: metrics
-    };
-
-    try {
-      const response = await fetch("http://localhost:8286/api/healthrecords", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify(payloadBody)
-      });
-
-      if (response.ok) {
-        alert("Đã lưu nhật ký sức khỏe thành công!");
-        window.location.href = "my-dailylogs.html";
-      } else {
-        const errorText = await response.text();
-        console.error("Lỗi khi lưu:", errorText);
-        alert("Lỗi khi lưu dữ liệu: " + errorText);
-      }
-    } catch (error) {
-      console.error("Exception:", error);
-      alert("Lỗi kết nối đến server!");
-    }
-  });
+  } catch (err) {
+    console.error("Lỗi khi submit:", err);
+    alert("Lỗi kết nối server!");
+  }
+});
 </script>
+
 <script type="module">
   import { loadCurrentUserData } from './js/user-info.js';
 
