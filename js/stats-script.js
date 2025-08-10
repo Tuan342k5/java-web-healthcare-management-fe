@@ -68,6 +68,25 @@ function getWeekLabels(selectedDateStr) {
   return labels;
 }
 
+// ✅ Lấy khoảng tuần (format dd/MM/yyyy)
+function getWeekRange(selectedDateStr) {
+  const selectedDate = new Date(selectedDateStr);
+  const dayOfWeek = selectedDate.getDay();
+  const start = new Date(selectedDate);
+  start.setDate(selectedDate.getDate() - dayOfWeek);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+
+  const formatDate = (d) => {
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  };
+
+  return `${formatDate(start)} - ${formatDate(end)}`;
+}
+
 // ✅ Chuẩn hóa dữ liệu theo labels (ngày trong tuần)
 function prepareChartData(metricData, labels) {
   const valueMap = {};
@@ -87,6 +106,12 @@ function getColor(index) {
 async function renderAllCharts(selectedDateStr) {
   const container = document.getElementById("chartsContainer");
   container.innerHTML = "";
+
+  // 📅 Hiển thị khoảng tuần
+  const weekRangeElem = document.getElementById("weekRange");
+  if (weekRangeElem) {
+    weekRangeElem.textContent = `Tuần: ${getWeekRange(selectedDateStr)}`;
+  }
 
   try {
     const records = await fetchHealthRecords();

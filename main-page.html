@@ -6,10 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Personal Health Tracker</title>
   <link rel="stylesheet" href="css/main-styles.css" />
+  <link rel="stylesheet" href="css/chatbot.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
 </head>
 
 
@@ -37,64 +39,71 @@
         </button>
 
         <!-- Menu -->
-<div class="collapse navbar-collapse main-nav" id="mainNav">
-  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-    
-    <li class="nav-item">
-      <a class="nav-link nav-btn" href="main-page.html">Home</a>
-    </li>
+        <div class="collapse navbar-collapse main-nav" id="mainNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
-    <li class="nav-item">
-      <a class="nav-link nav-btn" href="records.html">Progress Records</a>
-    </li>
+            <li class="nav-item">
+              <a class="nav-link nav-btn" href="main-page.html">Home</a>
+            </li>
 
-    <!-- My Targets Dropdown -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button"
-         data-bs-toggle="dropdown" aria-expanded="false">
-        My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
-        <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
-      </ul>
-    </li>
+            <li class="nav-item">
+              <a class="nav-link nav-btn" href="records.html">Progress Records</a>
+            </li>
 
-    <!-- Daily Logs Dropdown -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button"
-         data-bs-toggle="dropdown" aria-expanded="false">
-        Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="logsDropdown">
-        <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
-      </ul>
-    </li>
+            <!-- My Targets Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
+                <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
+              </ul>
+            </li>
 
-    <!-- User Account Dropdown (Sửa lại giống các dropdown khác) -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button"
-         data-bs-toggle="dropdown" aria-expanded="false">
-        Hello, <span id="current-user-name">Guest</span>!
-        <i class="fas fa-chevron-down dropdown-icon"></i>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="login.html">Logout</a></li>
-      </ul>
-    </li>
+            <!-- Daily Logs Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+                <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
+              </ul>
+            </li>
 
-  </ul>
-</div>
+            <!-- User Account Dropdown (Sửa lại giống các dropdown khác) -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Hello, <span id="current-user-name">Guest</span>!
+                <i class="fas fa-chevron-down dropdown-icon"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="myprofile.html">My profile</a></li>
+                <li><a class="dropdown-item" href="login.html">Logout</a></li>
+              </ul>
+            </li>
+
+          </ul>
+        </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-content">
-        
+
         <div class="hero-text">
           <h1>Welcome to Your Health Dashboard</h1>
           <p>Track your wellness journey with comprehensive health metrics</p>
@@ -305,6 +314,123 @@
         }
       });
     </script>
+
+    <script>
+      // ----- PHẦN LOGIC CHATBOT -----
+      const GOOGLE_API_KEY = "AIzaSyCkaK5Vextv_ht57Q3-13VHFMOSZo1lDMA"; // Thay API Key của bạn nếu cần
+      const GOOGLE_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + GOOGLE_API_KEY;
+
+      function addMessage(text, sender) {
+        const chatMessages = document.getElementById("chat-messages");
+        if (!chatMessages) return;
+
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message", `${sender}-message`);
+        if (sender === 'bot' && text === '...') {
+          messageElement.classList.add('typing-indicator');
+          messageElement.innerHTML = `<span></span><span></span><span></span>`;
+        } else {
+          messageElement.textContent = text;
+        }
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return messageElement;
+      }
+
+      async function sendMessage() {
+        const chatInput = document.getElementById("chat-input");
+        const userText = chatInput.value.trim();
+        if (userText === "") return;
+
+        addMessage(userText, "user");
+        chatInput.value = "";
+
+        const typingIndicator = addMessage("...", "bot");
+
+        try {
+          const response = await fetch(GOOGLE_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: userText }] }]
+            })
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("API Error:", errorData);
+            throw new Error(`API request failed: ${errorData.error.message}`);
+          }
+
+          const data = await response.json();
+          const botText = data.candidates[0].content.parts[0].text;
+
+          typingIndicator.remove();
+          addMessage(botText, "bot");
+
+        } catch (error) {
+          console.error("Error calling Gemini API:", error);
+          typingIndicator.remove();
+          addMessage("Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại.", "bot");
+        }
+      }
+
+      function initializeChatbot() {
+        const chatbotToggle = document.getElementById("chatbot-toggle");
+        const chatWindow = document.getElementById("chat-window");
+        const chatClose = document.getElementById("chat-close");
+        const chatInput = document.getElementById("chat-input");
+        const chatSend = document.getElementById("chat-send");
+
+        if (chatbotToggle && chatWindow) {
+          chatbotToggle.addEventListener("click", () => {
+            chatWindow.classList.toggle("open");
+          });
+        }
+
+        if (chatClose && chatWindow) {
+          chatClose.addEventListener("click", () => {
+            chatWindow.classList.remove("open");
+          });
+        }
+
+        if (chatSend) {
+          chatSend.addEventListener("click", sendMessage);
+        }
+
+        if (chatInput) {
+          chatInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              sendMessage();
+            }
+          });
+        }
+      }
+
+      // Chạy hàm khởi tạo chatbot sau khi trang tải xong
+      document.addEventListener("DOMContentLoaded", initializeChatbot);
+    </script>
+
+    <div class="chatbot-container">
+      <div class="chatbot-toggle" id="chatbot-toggle">
+        <i class="fas fa-comment-dots"></i>
+      </div>
+
+      <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+          <span>AI Assistant</span>
+          <button class="chat-close" id="chat-close">&times;</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+        <div class="message bot-message">Hello! How can I help you today?</div>
+      </div>
+      <div class="chat-input-form">
+        <input type="text" id="chat-input" placeholder="Enter message..." autocomplete="off" />
+        <button id="chat-send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+      </div>
+    </div>
 </body>
 
 </html>

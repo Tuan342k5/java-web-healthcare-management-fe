@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile</title>
+  <link rel="stylesheet" href="css/main-styles.css" />
+  <link rel="stylesheet" href="css/chatbot.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #f4f8ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .profile-card {
+      background-color: white;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      margin: 40px auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1E90FF;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #cfd9e9;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #1E90FF;
+      outline: none;
+      box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 18px;
+      background-color: #1E90FF;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #187bcd;
+    }
+
+    .message {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <div class="top-header">
+    <div class="contact-info">
+      <span id="user-phone" class="phone">Loading...</span>
+      <span id="user-email" class="email">Loading...</span>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg main-header">
+    <div class="container-fluid header-content">
+      <a class="navbar-brand logo-placeholder" href="main-page.html">
+        <img src="imgs/healthcare_logo(2).png" />
+      </a>
+
+      <button class="navbar-toggler menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+        aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse main-nav" id="mainNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+          <li class="nav-item"><a class="nav-link nav-btn" href="main-page.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link nav-btn" href="records.html">Progress Records</a></li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
+              <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+              <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Hello, <span id="current-user-name">Guest</span>!
+              <i class="fas fa-chevron-down dropdown-icon"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
+              <li><a class="dropdown-item" href="myprofile.html">My Profile</a></li>
+              <li><a class="dropdown-item" href="login.html">Logout</a></li>
+            </ul>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN PROFILE FORM ===== -->
+  <div class="profile-card">
+    <h2>My Profile</h2>
+    <div id="message" class="message"></div>
+
+    <label for="username">Name</label>
+    <input type="text" id="username" name="username" />
+
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob" name="dob" />
+
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender">
+      <option value="">-- Select --</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <button onclick="saveProfile()">💾 Save Changes</button>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p class="footer-copy">
+        &copy; 2025 Health Tracker App. All rights reserved.
+      </p>
+      <p class="footer-links">
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Terms of Service</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ----- PHẦN DỮ LIỆU PROFILE -----
+    const API_BASE = "http://127.0.0.1:8286/api/users";
+    const token = localStorage.getItem("jwtToken");
+
+    async function loadCurrentUserData() {
+      const nameEl = document.getElementById("current-user-name");
+      const phoneEl = document.getElementById("user-phone");
+      const emailEl = document.getElementById("user-email");
+
+      if (!token) {
+        nameEl.textContent = "Guest";
+        phoneEl.textContent = "N/A";
+        emailEl.textContent = "N/A";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error("Failed to fetch");
+        const user = await res.json();
+        nameEl.textContent = user.fullName || "User";
+        phoneEl.textContent = user.phoneNumber || "No phone";
+        emailEl.textContent = user.email || "No email";
+
+        document.getElementById("username").value = user.username || "";
+        document.getElementById("dob").value = user.dob || "";
+        document.getElementById("gender").value = user.gender || "";
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function saveProfile() {
+      const updatedInfo = {
+        username: document.getElementById("username").value,
+        dob: document.getElementById("dob").value,
+        gender: document.getElementById("gender").value
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/update`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(updatedInfo)
+        });
+        const msg = await res.text();
+        const messageEl = document.getElementById("message");
+
+        if (res.ok) {
+          messageEl.style.color = "green";
+          messageEl.textContent = "✅ Profile updated successfully!";
+        } else {
+          messageEl.style.color = "red";
+          messageEl.textContent = msg;
+        }
+      } catch (err) {
+        document.getElementById("message").style.color = "red";
+        document.getElementById("message").textContent = "❌ Failed to update.";
+      }
+    }
+
+    // ----- PHẦN LOGIC CHATBOT -----
+    // QUAN TRỌNG: Thay thế "YOUR_GOOGLE_AI_API_KEY" bằng API key thật của bạn
+    const GOOGLE_API_KEY = "AIzaSyCkaK5Vextv_ht57Q3-13VHFMOSZo1lDMA";
+    const GOOGLE_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + GOOGLE_API_KEY;
+
+    function addMessage(text, sender) {
+      const chatMessages = document.getElementById("chat-messages");
+      // Thêm một kiểm tra an toàn để tránh lỗi nếu không tìm thấy phần tử
+      if (!chatMessages) return;
+
+      const messageElement = document.createElement("div");
+      messageElement.classList.add("message", `${sender}-message`);
+      if (sender === 'bot' && text === '...') {
+        messageElement.classList.add('typing-indicator');
+        messageElement.innerHTML = `<span></span><span></span><span></span>`;
+      } else {
+        messageElement.textContent = text;
+      }
+      chatMessages.appendChild(messageElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return messageElement; // Trả về phần tử để có thể xóa đi sau này
+    }
+
+    async function sendMessage() {
+      const chatInput = document.getElementById("chat-input");
+      const userText = chatInput.value.trim();
+      if (userText === "") return;
+
+      addMessage(userText, "user");
+      chatInput.value = "";
+
+      // Hiển thị chỉ báo "đang gõ" của bot
+      const typingIndicator = addMessage("...", "bot");
+
+      try {
+        const response = await fetch(GOOGLE_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: userText }] }]
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("API Error:", errorData);
+          throw new Error(`API request failed: ${errorData.error.message}`);
+        }
+
+        const data = await response.json();
+        const botText = data.candidates[0].content.parts[0].text;
+
+        typingIndicator.remove(); // Xóa chỉ báo "đang gõ"
+        addMessage(botText, "bot");
+
+      } catch (error) {
+        console.error("Error calling Gemini API:", error);
+        typingIndicator.remove(); // Xóa chỉ báo "đang gõ" nếu có lỗi
+        addMessage("Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại.", "bot");
+      }
+    }
+
+    // Hàm này sẽ thiết lập các sự kiện cho chatbot
+    function initializeChatbot() {
+      const chatbotToggle = document.getElementById("chatbot-toggle");
+      const chatWindow = document.getElementById("chat-window");
+      const chatClose = document.getElementById("chat-close");
+      const chatInput = document.getElementById("chat-input");
+      const chatSend = document.getElementById("chat-send");
+
+      // Gán sự kiện một cách an toàn
+      if (chatbotToggle && chatWindow) {
+        chatbotToggle.addEventListener("click", () => {
+          chatWindow.classList.toggle("open");
+        });
+      }
+
+      if (chatClose && chatWindow) {
+        chatClose.addEventListener("click", () => {
+          chatWindow.classList.remove("open");
+        });
+      }
+
+      if (chatSend) {
+        chatSend.addEventListener("click", sendMessage);
+      }
+
+      if (chatInput) {
+        chatInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault(); // Ngăn hành vi mặc định của phím Enter
+            sendMessage();
+          }
+        });
+      }
+    }
+
+    // ----- SỰ KIỆN KHI TRANG TẢI XONG -----
+    // Chạy các hàm khởi tạo sau khi trang đã tải xong hoàn toàn
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCurrentUserData();
+      initializeChatbot();
+    });
+  </script>
+
+  <div class="chatbot-container">
+    <div class="chatbot-toggle" id="chatbot-toggle">
+      <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <span>AI Assistant</span>
+        <button class="chat-close" id="chat-close">&times;</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="message bot-message">Hello! How can I help you today?</div>
+      </div>
+      <div class="chat-input-form">
+        <input type="text" id="chat-input" placeholder="Enter message..." autocomplete="off" />
+        <button id="chat-send" style="margin-top: 10px;"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

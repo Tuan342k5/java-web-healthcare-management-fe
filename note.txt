@@ -1,2 +1,0 @@
-đã hoàn thành việc nối api cho thêm mục tiêu và xem mục tiêu
-chưa gộp thêm daily log và xem daily log

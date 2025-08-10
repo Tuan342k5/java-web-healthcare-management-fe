@@ -1,0 +1,200 @@
+    /* ===== CHATBOT STYLES ===== */
+    .chatbot-container {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 1000;
+    }
+
+    .chatbot-toggle {
+      width: 60px;
+      height: 60px;
+      background-color: #1E90FF;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .chatbot-toggle:hover {
+      transform: scale(1.1);
+      background-color: #187bcd;
+    }
+
+    .chat-window {
+      width: 370px;
+      max-width: 90vw;
+      height: 500px;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      border: 1px solid #e0e0e0;
+    }
+
+    .chat-window.open {
+      display: flex;
+    }
+
+    .chat-header {
+      background-color: #1E90FF;
+      color: white;
+      font-weight: bold;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #dcdcdc;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0 8px;
+      width: auto;
+      /* Ghi đè lại width: 100% của button chung */
+    }
+
+    .chat-messages {
+      flex-grow: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: #888 #f1f1f1;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 4px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background-color: #555;
+    }
+
+
+    .message {
+      padding: 12px 18px;
+      border-radius: 20px;
+      max-width: 80%;
+      line-height: 1.4;
+      word-wrap: break-word;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .user-message {
+      background-color: #1E90FF;
+      color: white;
+      border-bottom-right-radius: 5px;
+      align-self: flex-end;
+    }
+
+    .bot-message {
+      background-color: #e9ecef;
+      color: #333;
+      border-bottom-left-radius: 5px;
+      align-self: flex-start;
+    }
+
+    .chat-input-form {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      background-color: #fff;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+    }
+
+    #chat-input {
+      flex-grow: 1;
+      border: 1px solid #cfd9e9;
+      border-radius: 25px;
+      padding: 10px 15px;
+      margin-right: 8px;
+    }
+
+    #chat-input:focus {
+      outline: none;
+      border-color: #1E90FF;
+      box-shadow: 0 0 5px rgba(30, 144, 255, 0.3);
+    }
+
+    #chat-send {
+      background-color: #1E90FF;
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    #chat-send:hover {
+      background-color: #187bcd;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+    }
+
+    .typing-indicator span {
+      height: 8px;
+      width: 8px;
+      background-color: #999;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 0 2px;
+      animation: bounce 1s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+      }
+
+      30% {
+        transform: translateY(-6px);
+      }
+    }

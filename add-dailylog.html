@@ -1,206 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal Health Tracker - Add Daily Log</title>
   <link rel="stylesheet" href="css/main-styles.css">
+  <link rel="stylesheet" href="css/chatbot.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <!-- Bootstrap 5 CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
 </head>
+
 <body>
   <div class="app-container">
-      <!-- Top Header with Contact Info -->
-      <div class="top-header">
-          <div class="contact-info">
+    <!-- Top Header with Contact Info -->
+    <div class="top-header">
+      <div class="contact-info">
         <span id="user-phone" class="phone">Đang tải...</span>
         <span id="user-email" class="email">Đang tải...</span>
-          </div>
-      </div>  
+      </div>
+    </div>
 
-      <!-- Main Header -->
-      <nav class="navbar navbar-expand-lg main-header">
-        <div class="container-fluid header-content">
-          <!-- Logo -->
-          <a class="navbar-brand logo-placeholder" href="#">
-            <img src="imgs/healthcare_logo(2).png" />
-          </a>
+    <!-- Main Header -->
+    <nav class="navbar navbar-expand-lg main-header">
+      <div class="container-fluid header-content">
+        <!-- Logo -->
+        <a class="navbar-brand logo-placeholder" href="#">
+          <img src="imgs/healthcare_logo(2).png" />
+        </a>
 
-          <!-- Hamburger button -->
-          <button
-            class="navbar-toggler menu-toggle"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mainNav"
-            aria-controls="mainNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
+        <!-- Hamburger button -->
+        <button class="navbar-toggler menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+          aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <!-- Menu -->
-<div class="collapse navbar-collapse main-nav" id="mainNav">
-  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-    
-    <li class="nav-item">
-      <a class="nav-link nav-btn" href="main-page.html">Home</a>
-    </li>
+        <!-- Menu -->
+        <div class="collapse navbar-collapse main-nav" id="mainNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
-    <li class="nav-item">
-      <a class="nav-link nav-btn" href="records.html">Progress Records</a>
-    </li>
+            <li class="nav-item">
+              <a class="nav-link nav-btn" href="main-page.html">Home</a>
+            </li>
 
-    <!-- My Targets Dropdown -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button"
-         data-bs-toggle="dropdown" aria-expanded="false">
-        My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
-        <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
-      </ul>
-    </li>
+            <li class="nav-item">
+              <a class="nav-link nav-btn" href="records.html">Progress Records</a>
+            </li>
 
-    <!-- Daily Logs Dropdown -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button"
-         data-bs-toggle="dropdown" aria-expanded="false">
-        Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="logsDropdown">
-        <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
-      </ul>
-    </li>
+            <!-- My Targets Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-btn" href="#" id="targetsDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                My Targets <i class="fas fa-chevron-down dropdown-icon"></i>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="targetsDropdown">
+                <li><a class="dropdown-item" href="my-targets.html">Show My Targets</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="add-target.html">Add New Target</a></li>
+              </ul>
+            </li>
 
-    <!-- User Account Dropdown (Sửa lại giống các dropdown khác) -->
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button"
-         data-bs-toggle="dropdown" aria-expanded="false">
-        Hello, <span id="current-user-name">Guest</span>!
-        <i class="fas fa-chevron-down dropdown-icon"></i>
-      </a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="login.html">Logout</a></li>
-      </ul>
-    </li>
+            <!-- Daily Logs Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-btn" href="#" id="logsDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Daily Logs <i class="fas fa-chevron-down dropdown-icon"></i>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+                <li><a class="dropdown-item" href="my-dailylogs.html">Show Daily Logs</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="add-dailylog.html">Add New Daily Log</a></li>
+              </ul>
+            </li>
 
-  </ul>
-</div>
-      </nav>
+            <!-- User Account Dropdown (Sửa lại giống các dropdown khác) -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-btn" href="#" id="userAccountDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Hello, <span id="current-user-name">Guest</span>!
+                <i class="fas fa-chevron-down dropdown-icon"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userAccountDropdown">
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="myprofile.html">My profile</a></li>
+                <li><a class="dropdown-item" href="login.html">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+    </nav>
 
-      <!-- Hero Section -->
-      <section class="hero-section">
-          <div class="hero-content">
-              <div class="hero-graphics">
-                  
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-graphics">
+
+        </div>
+        <div class="hero-text">
+          <h1>Add New Daily Log</h1>
+          <p>Record your daily health metrics</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Add Daily Log View -->
+      <div id="add-daily-log-view" class="content-view active">
+        <div class="form-container">
+          <h2>Daily Health Certificate</h2>
+          <form id="dailyLogForm">
+            <div class="form-group d-flex align-items-center">
+              <label for="logDate" class="me-2 mb-0">Date</label>
+              <input type="date" id="logDate" name="logDate" class="form-control" required>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="weightValue">Weight (kg)</label>
+                  <input type="number" id="weightValue" step="0.1" placeholder="e.g., 70.5">
+                </div>
               </div>
-              <div class="hero-text">
-                  <h1>Add New Daily Log</h1>
-                  <p>Record your daily health metrics</p>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="heightValue">Height (cm)</label>
+                  <input type="number" id="heightValue" step="0.1" placeholder="e.g., 175.0">
+                </div>
               </div>
-          </div>
-      </section>
+            </div>
 
-      <!-- Main Content -->
-      <main class="main-content">
-          <!-- Add Daily Log View -->
-          <div id="add-daily-log-view" class="content-view active">
-              <div class="form-container">
-                  <h2>Daily Health Certificate</h2>
-                  <form id="dailyLogForm">
-                       <div class="form-group d-flex align-items-center">
-                        <label for="logDate" class="me-2 mb-0">Date</label>
-                        <input type="date" id="logDate" name="logDate" class="form-control" required>
-                      </div>  
-                      <hr class="my-4">
-                      <div class="row">
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="weightValue">Weight (kg)</label>
-                                  <input type="number" id="weightValue" step="0.1" placeholder="e.g., 70.5">
-                              </div>
-                          </div>
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="heightValue">Height (cm)</label>
-                                  <input type="number" id="heightValue" step="0.1" placeholder="e.g., 175.0">
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="row">
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="stepsValue">Steps</label>
-                                  <input type="number" id="stepsValue" placeholder="e.g., 8500">
-                              </div>
-                          </div>
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="heartRateValue">Heart Rate (bpm)</label>
-                                  <input type="number" id="heartRateValue" placeholder="e.g., 72">
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="row">
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="bloodPressure">Blood Pressure</label>
-                                  <input type="text" id="bloodPressure" placeholder="e.g., 120/80">
-                              </div>
-                          </div>
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="exerciseTime">Exercise Time</label>
-                                  <input type="number" id="exerciseTime" placeholder="e.g., 120">
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="row">
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="bloodSugarValue">Blood Sugar (mg/dL)</label>
-                                  <input type="number" id="bloodSugarValue" step="0.1" placeholder="e.g., 95.0">
-                              </div>
-                          </div>
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label for="sleepValue">Sleep (hours)</label>
-                                  <input type="number" id="sleepValue" step="0.1" placeholder="e.g., 7.5">
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="form-group">
-                          <label for="notes">Notes (Optional)</label>
-                          <textarea id="notes" rows="3" placeholder="Any additional notes..."></textarea>
-                      </div>
-
-                      <div class="form-actions">
-                          <button type="button" class="btn-secondary" onclick="window.location.href='main-page.html'">Cancel</button>
-                          <button type="submit" class="btn-primary">Save Daily Log</button>
-                      </div>
-                  </form>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="stepsValue">Steps</label>
+                  <input type="number" id="stepsValue" placeholder="e.g., 8500">
+                </div>
               </div>
-          </div>
-      </main>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="heartRateValue">Heart Rate (bpm)</label>
+                  <input type="number" id="heartRateValue" placeholder="e.g., 72">
+                </div>
+              </div>
+            </div>
 
-      <!-- Footer with Action Buttons -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="bloodPressure">Blood Pressure</label>
+                  <input type="text" id="bloodPressure" placeholder="e.g., 120/80">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="exerciseTime">Exercise Time</label>
+                  <input type="number" id="exerciseTime" placeholder="e.g., 120">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="bloodSugarValue">Blood Sugar (mg/dL)</label>
+                  <input type="number" id="bloodSugarValue" step="0.1" placeholder="e.g., 95.0">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="sleepValue">Sleep (hours)</label>
+                  <input type="number" id="sleepValue" step="0.1" placeholder="e.g., 7.5">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Notes (Optional)</label>
+              <textarea id="notes" rows="3" placeholder="Any additional notes..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary"
+                onclick="window.location.href='main-page.html'">Cancel</button>
+              <button type="submit" class="btn-primary">Save Daily Log</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer with Action Buttons -->
+
     <footer class="app-footer">
       <div class="footer-container">
         <p class="footer-copy">
@@ -213,155 +215,275 @@
       </div>
     </footer>
   </div>
-<script>
-function parseJwt(token) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-  ).join(''));
-  return JSON.parse(jsonPayload);
-}
 
-let isUpdateMode = false; // Cờ xác định insert hay update
-
-const token = localStorage.getItem("jwtToken");
-if (!token) {
-  alert("Bạn chưa đăng nhập!");
-  window.location.href = "login.html";
-}
-const payload = parseJwt(token);
-const userId = payload.userId || payload.id || payload.sub;
-
-// 1️⃣ Lắng nghe khi chọn ngày
-document.getElementById("logDate").addEventListener("change", async function () {
-  const date = this.value;
-  if (!date) return;
-
-  try {
-    const res = await fetch(`http://localhost:8286/api/healthrecords/user/${userId}/log/${date}`, {
-      method: "GET",
-      headers: { "Authorization": "Bearer " + token }
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.metrics) {
-        // Có dữ liệu → Fill form
-        document.getElementById("notes").value = data.notes || "";
-        document.getElementById("weightValue").value = getMetricValue(data.metrics, 1);
-        document.getElementById("heightValue").value = getMetricValue(data.metrics, 2);
-        document.getElementById("stepsValue").value = getMetricValue(data.metrics, 3);
-        document.getElementById("heartRateValue").value = getMetricValue(data.metrics, 4);
-        document.getElementById("bloodPressure").value = getMetricValue(data.metrics, 5);
-        document.getElementById("exerciseTime").value = getMetricValue(data.metrics, 6);
-        document.getElementById("bloodSugarValue").value = getMetricValue(data.metrics, 7);
-        document.getElementById("sleepValue").value = getMetricValue(data.metrics, 8);
-
-        isUpdateMode = true;
-        document.getElementById("submitBtn").textContent = "Update";
-      } else {
-        // Không có dữ liệu → Reset form
-        resetForm();
-        isUpdateMode = false;
-        document.getElementById("submitBtn").textContent = "Add";
-      }
-    } else {
-      resetForm();
-      isUpdateMode = false;
-      document.getElementById("submitBtn").textContent = "Add";
+  <script>
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''));
+      return JSON.parse(jsonPayload);
     }
-  } catch (err) {
-    console.error("Lỗi khi check dữ liệu:", err);
-  }
-});
 
-function getMetricValue(metrics, metricId) {
-  const m = metrics.find(item => item.metricId === metricId);
-  return m ? m.value : "";
-}
+    let isUpdateMode = false; // Cờ xác định insert hay update
 
-function resetForm() {
-  document.getElementById("notes").value = "";
-  document.getElementById("weightValue").value = "";
-  document.getElementById("heightValue").value = "";
-  document.getElementById("stepsValue").value = "";
-  document.getElementById("heartRateValue").value = "";
-  document.getElementById("bloodPressure").value = "";
-  document.getElementById("exerciseTime").value = "";
-  document.getElementById("bloodSugarValue").value = "";
-  document.getElementById("sleepValue").value = "";
-}
-
-// 2️⃣ Submit form
-document.getElementById("dailyLogForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
-
-  const date = document.getElementById("logDate").value;
-  const notes = document.getElementById("notes").value;
-
-  const metrics = [
-    { metricId: 1, value: document.getElementById("weightValue").value },
-    { metricId: 2, value: document.getElementById("heightValue").value },
-    { metricId: 3, value: document.getElementById("stepsValue").value },
-    { metricId: 4, value: document.getElementById("heartRateValue").value },
-    { metricId: 5, value: document.getElementById("bloodPressure").value },
-    { metricId: 6, value: document.getElementById("exerciseTime").value },
-    { metricId: 7, value: document.getElementById("bloodSugarValue").value },
-    { metricId: 8, value: document.getElementById("sleepValue").value }
-  ].filter(m => m.value); // Bỏ rỗng
-
-  if (metrics.length === 0) {
-    alert("Vui lòng nhập ít nhất một thông tin!");
-    return;
-  }
-
-  const payloadBody = {
-    userId,
-    date,
-    notes,
-    metrics
-  };
-
-  try {
-    const url = isUpdateMode
-      ? "http://localhost:8286/api/healthrecords/by-user-date"
-      : "http://localhost:8286/api/healthrecords";
-
-    const method = isUpdateMode ? "PUT" : "POST";
-
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify(payloadBody)
-    });
-
-    if (response.ok) {
-      alert(isUpdateMode ? "Cập nhật thành công!" : "Thêm mới thành công!");
-      window.location.href = "my-dailylogs.html";
-    } else {
-      const errorText = await response.text();
-      alert("Lỗi: " + errorText);
-    }
-  } catch (err) {
-    console.error("Lỗi khi submit:", err);
-    alert("Lỗi kết nối server!");
-  }
-});
-</script>
-
-<script type="module">
-  import { loadCurrentUserData } from './js/user-info.js';
-
-  document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("jwtToken");
-    await loadCurrentUserData(token);
+    if (!token) {
+      alert("Bạn chưa đăng nhập!");
+      window.location.href = "login.html";
+    }
+    const payload = parseJwt(token);
+    const userId = payload.userId || payload.id || payload.sub;
 
-    // Có thể tiếp tục xử lý thêm ở đây...
-  });
-</script>
+    // 1️⃣ Lắng nghe khi chọn ngày
+    document.getElementById("logDate").addEventListener("change", async function () {
+      const date = this.value;
+      if (!date) return;
+
+      try {
+        const res = await fetch(`http://localhost:8286/api/healthrecords/user/${userId}/log/${date}`, {
+          method: "GET",
+          headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.metrics) {
+            // Có dữ liệu → Fill form
+            document.getElementById("notes").value = data.notes || "";
+            document.getElementById("weightValue").value = getMetricValue(data.metrics, 1);
+            document.getElementById("heightValue").value = getMetricValue(data.metrics, 2);
+            document.getElementById("stepsValue").value = getMetricValue(data.metrics, 3);
+            document.getElementById("heartRateValue").value = getMetricValue(data.metrics, 4);
+            document.getElementById("bloodPressure").value = getMetricValue(data.metrics, 5);
+            document.getElementById("exerciseTime").value = getMetricValue(data.metrics, 6);
+            document.getElementById("bloodSugarValue").value = getMetricValue(data.metrics, 7);
+            document.getElementById("sleepValue").value = getMetricValue(data.metrics, 8);
+
+            isUpdateMode = true;
+            document.getElementById("submitBtn").textContent = "Update";
+          } else {
+            // Không có dữ liệu → Reset form
+            resetForm();
+            isUpdateMode = false;
+            document.getElementById("submitBtn").textContent = "Add";
+          }
+        } else {
+          resetForm();
+          isUpdateMode = false;
+          document.getElementById("submitBtn").textContent = "Add";
+        }
+      } catch (err) {
+        console.error("Lỗi khi check dữ liệu:", err);
+      }
+    });
+
+    function getMetricValue(metrics, metricId) {
+      const m = metrics.find(item => item.metricId === metricId);
+      return m ? m.value : "";
+    }
+
+
+    function resetForm() {
+      document.getElementById("notes").value = "";
+      document.getElementById("weightValue").value = "";
+      document.getElementById("heightValue").value = "";
+      document.getElementById("stepsValue").value = "";
+      document.getElementById("heartRateValue").value = "";
+      document.getElementById("bloodPressure").value = "";
+      document.getElementById("exerciseTime").value = "";
+      document.getElementById("bloodSugarValue").value = "";
+      document.getElementById("sleepValue").value = "";
+    }
+
+    // 2️⃣ Submit form
+    document.getElementById("dailyLogForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const date = document.getElementById("logDate").value;
+      const notes = document.getElementById("notes").value;
+
+      const metrics = [
+        { metricId: 1, value: document.getElementById("weightValue").value },
+        { metricId: 2, value: document.getElementById("heightValue").value },
+        { metricId: 3, value: document.getElementById("stepsValue").value },
+        { metricId: 4, value: document.getElementById("heartRateValue").value },
+        { metricId: 5, value: document.getElementById("bloodPressure").value },
+        { metricId: 6, value: document.getElementById("exerciseTime").value },
+        { metricId: 7, value: document.getElementById("bloodSugarValue").value },
+        { metricId: 8, value: document.getElementById("sleepValue").value }
+      ].filter(m => m.value); // Bỏ rỗng
+
+      if (metrics.length === 0) {
+        alert("Vui lòng nhập ít nhất một thông tin!");
+        return;
+      }
+
+      const payloadBody = {
+        userId,
+        date,
+        notes,
+        metrics
+      };
+
+      try {
+        const url = isUpdateMode
+          ? "http://localhost:8286/api/healthrecords/by-user-date"
+          : "http://localhost:8286/api/healthrecords";
+
+        const method = isUpdateMode ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify(payloadBody)
+        });
+
+        if (response.ok) {
+          alert(isUpdateMode ? "Cập nhật thành công!" : "Thêm mới thành công!");
+          window.location.href = "my-dailylogs.html";
+        } else {
+          const errorText = await response.text();
+          alert("Lỗi: " + errorText);
+        }
+      } catch (err) {
+        console.error("Lỗi khi submit:", err);
+        alert("Lỗi kết nối server!");
+      }
+    });
+  </script>
+
+  <script type="module">
+    import { loadCurrentUserData } from './js/user-info.js';
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const token = localStorage.getItem("jwtToken");
+      await loadCurrentUserData(token);
+
+      // Có thể tiếp tục xử lý thêm ở đây...
+    });
+  </script>
+
+  <script>
+    // ----- PHẦN LOGIC CHATBOT -----
+    const GOOGLE_API_KEY = "AIzaSyCkaK5Vextv_ht57Q3-13VHFMOSZo1lDMA"; // Thay API Key của bạn nếu cần
+    const GOOGLE_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + GOOGLE_API_KEY;
+
+    function addMessage(text, sender) {
+      const chatMessages = document.getElementById("chat-messages");
+      if (!chatMessages) return;
+
+      const messageElement = document.createElement("div");
+      messageElement.classList.add("message", `${sender}-message`);
+      if (sender === 'bot' && text === '...') {
+        messageElement.classList.add('typing-indicator');
+        messageElement.innerHTML = `<span></span><span></span><span></span>`;
+      } else {
+        messageElement.textContent = text;
+      }
+      chatMessages.appendChild(messageElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return messageElement;
+    }
+
+    async function sendMessage() {
+      const chatInput = document.getElementById("chat-input");
+      const userText = chatInput.value.trim();
+      if (userText === "") return;
+
+      addMessage(userText, "user");
+      chatInput.value = "";
+
+      const typingIndicator = addMessage("...", "bot");
+
+      try {
+        const response = await fetch(GOOGLE_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: userText }] }]
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("API Error:", errorData);
+          throw new Error(`API request failed: ${errorData.error.message}`);
+        }
+
+        const data = await response.json();
+        const botText = data.candidates[0].content.parts[0].text;
+
+        typingIndicator.remove();
+        addMessage(botText, "bot");
+
+      } catch (error) {
+        console.error("Error calling Gemini API:", error);
+        typingIndicator.remove();
+        addMessage("Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại.", "bot");
+      }
+    }
+
+    function initializeChatbot() {
+      const chatbotToggle = document.getElementById("chatbot-toggle");
+      const chatWindow = document.getElementById("chat-window");
+      const chatClose = document.getElementById("chat-close");
+      const chatInput = document.getElementById("chat-input");
+      const chatSend = document.getElementById("chat-send");
+
+      if (chatbotToggle && chatWindow) {
+        chatbotToggle.addEventListener("click", () => {
+          chatWindow.classList.toggle("open");
+        });
+      }
+
+      if (chatClose && chatWindow) {
+        chatClose.addEventListener("click", () => {
+          chatWindow.classList.remove("open");
+        });
+      }
+
+      if (chatSend) {
+        chatSend.addEventListener("click", sendMessage);
+      }
+
+      if (chatInput) {
+        chatInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+    }
+
+    // Chạy hàm khởi tạo chatbot sau khi trang tải xong
+    document.addEventListener("DOMContentLoaded", initializeChatbot);
+  </script>
+
+  <div class="chatbot-container">
+    <div class="chatbot-toggle" id="chatbot-toggle">
+      <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <span>AI Assistant</span>
+        <button class="chat-close" id="chat-close">&times;</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="message bot-message">Hello! How can I help you today?</div>
+      </div>
+      <div class="chat-input-form">
+        <input type="text" id="chat-input" placeholder="Enter message..." autocomplete="off" />
+        <button id="chat-send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>

@@ -1,280 +1,295 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Hệ Thống Y Tế</title>
-    <link rel="stylesheet" href="css/admin-style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Ngăn body scroll, để iframe xử lý */
-        }
-        
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-        
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            margin-left: 250px;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        header {
-            flex-shrink: 0; /* Không cho header co lại */
-            height: 80px;
-            background: white;
-            padding: 20px 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .iframe-container {
-            flex: 1;
-            overflow: hidden;
-            background: #f8f9fa;
-        }
-
-        #content-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-        
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-        
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar-header h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0;
-        }
-        
-        .nav-links {
-            list-style: none;
-            padding: 20px 0;
-            margin: 0;
-        }
-        
-        .nav-links li {
-            margin: 5px 0;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transform: translateX(5px);
-        }
-        
-        .nav-link i {
-            margin-right: 10px;
-            width: 20px;
-            font-size: 16px;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .user-profile i {
-            font-size: 24px;
-            color: #7f8c8d;
-        }
-        
-        .btn-logout {
-            padding: 8px 16px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s ease;
-        }
-        
-        .btn-logout:hover {
-            background: #c0392b;
-        }
-        
-        header h2 {
-            color: #2c3e50;
-            font-weight: 600;
-            margin: 0;
-        }
-        
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            .container {
-                position: relative;
-            }
-        }
-    </style>
+    <title>User Management | Admin Dashboard</title>
+    <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
+
 <body>
-    <div class="container">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-heartbeat"></i> Admin Panel</h3>
-            </div>
-            <ul class="nav-links">
-                <li><a href="#" class="nav-link active" data-page="dashboard.html"><i class="fas fa-tachometer-alt"></i> Bảng điều khiển</a></li>
-                <li><a href="#" class="nav-link" data-page="users.html"><i class="fas fa-users"></i> Người dùng</a></li>
-                <li><a href="#" class="nav-link" data-page="daily-logs.html"><i class="fas fa-book-medical"></i> Nhật ký</a></li>
-                <li><a href="#" class="nav-link" data-page="health-records.html"><i class="fas fa-file-medical"></i> Hồ sơ sức khỏe</a></li>
-                <li><a href="#" class="nav-link" data-page="targets.html"><i class="fas fa-bullseye"></i> Mục tiêu</a></li>
-                <li><a href="#" class="nav-link" data-page="metric-types.html"><i class="fas fa-ruler-combined"></i> Loại số liệu</a></li>
-                <li><a href="#" class="nav-link" data-page="settings.html"><i class="fas fa-cog"></i> Cài đặt</a></li>
-            </ul>
-        </nav>
+    <div class="admin-container">
+        <div class="header">
+            <h1><i class="fas fa-users-cog"></i> User Management</h1>
+            <p>Manage and monitor all users in your system</p>
+            <button id="logout-button" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
 
-        <main class="main-content">
-            <header>
-                <h2>Chào mừng quay trở lại, <span id="current-user-name">Admin</span>!</h2>
-                <div class="user-profile">
-                    <i class="fas fa-user-circle"></i>
-                    <button id="logout-btn" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
-                </div>
-            </header>
-
-            <div class="iframe-container">
-                <iframe id="content-frame" src="pages/dashboard.html"></iframe>
+        <div class="controls-section">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="search" id="search-input" class="search-input"
+                    placeholder="Search by username or email...">
+                <button type="button" id="clear-search-button" class="clear-search-btn" style="display: none;">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-        </main>
+            <div class="action-buttons">
+                <button id="export-button" class="btn btn-success">
+                    <i class="fas fa-download"></i> Export Excel
+                </button>
+                <button id="refresh-button" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="total-users">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="admin-count">0</div>
+                <div class="stat-label">Admins</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="user-count">0</div>
+                <div class="stat-label">Regular Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="filtered-count">0</div>
+                <div class="stat-label">Filtered Results</div>
+            </div>
+        </div>
+
+        <div id="error" class="message-banner error" style="display: none;"></div>
+        <div id="success" class="message-banner success" style="display: none;"></div>
+        <div id="loading" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading data...</p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Contact Information</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Kiểm tra đăng nhập
-            
+            // === DOM Elements ===
+            const API_BASE_URL = 'http://localhost:8286/api';
+            const userTableBody = document.getElementById('user-table-body');
+            const loadingDiv = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const successDiv = document.getElementById('success');
+            const exportButton = document.getElementById('export-button');
+            const refreshButton = document.getElementById('refresh-button');
+            const searchInput = document.getElementById('search-input');
+            const clearSearchButton = document.getElementById('clear-search-button');
+            const logoutButton = document.getElementById('logout-button');
 
-            // Hiển thị tên người dùng
-            const currentUserName = localStorage.getItem('currentUser') || 'Admin';
-            document.getElementById('current-user-name').textContent = currentUserName;
+            // Stats elements
+            const totalUsersEl = document.getElementById('total-users');
+            const adminCountEl = document.getElementById('admin-count');
+            const userCountEl = document.getElementById('user-count');
+            const filteredCountEl = document.getElementById('filtered-count');
 
-            // Xử lý chuyển tab
-            const navLinks = document.querySelectorAll('.nav-link');
-            const contentFrame = document.getElementById('content-frame');
+            // === State ===
+            let allUsersData = [];
+            let filteredUsersData = [];
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    
-                    // Loại bỏ active từ tất cả nav-links
-                    navLinks.forEach(item => item.classList.remove('active'));
-                    
-                    // Thêm active vào link được click
-                    link.classList.add('active');
-                    
-                    // Tải trang tương ứng vào iframe
-                    const pageName = link.dataset.page;
-                    contentFrame.src = `pages/${pageName}`;
-                });
-            });
+            // === Functions ===
+            const fetchUsers = async (token) => {
+                showLoading(true);
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
-            // Xử lý đăng xuất
-            document.getElementById('logout-btn').addEventListener('click', () => {
-                if (confirm('Bạn có muốn đăng xuất không?')) {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('currentUser');
-                    window.location.href = 'login.html';
+                    allUsersData = await response.json();
+                    console.log("Data structure of a user from API:", allUsersData[0]);
+                    filteredUsersData = [...allUsersData];
+                    renderUsers(filteredUsersData);
+                    updateStats();
+                } catch (error) {
+                    console.error('Failed to fetch user data:', error);
+                    showMessage('error', 'Could not load user data. Please try again.');
+                } finally {
+                    showLoading(false);
                 }
-            });
+            };
 
-            // Xử lý responsive menu (mobile)
-            const sidebar = document.querySelector('.sidebar');
-            let menuToggle;
-            
-            // Tạo nút menu cho mobile nếu cần
-            if (window.innerWidth <= 768) {
-                menuToggle = document.createElement('button');
-                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                menuToggle.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    left: 20px;
-                    z-index: 1001;
-                    background: #667eea;
-                    color: white;
-                    border: none;
-                    padding: 10px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                `;
-                document.body.appendChild(menuToggle);
-
-                menuToggle.addEventListener('click', () => {
-                    sidebar.classList.toggle('active');
-                });
-
-                // Đóng menu khi click vào content
-                contentFrame.addEventListener('load', () => {
-                    sidebar.classList.remove('active');
-                });
-            }
-
-            // Xử lý resize window
-            window.addEventListener('resize', () => {
-                if (window.innerWidth > 768) {
-                    sidebar.classList.remove('active');
-                    if (menuToggle) {
-                        menuToggle.style.display = 'none';
-                    }
+            const renderUsers = (users) => {
+                filteredUsersData = users; // Update the currently filtered list
+                if (users.length === 0) {
+                    userTableBody.innerHTML = `<tr><td colspan="4" class="empty-state"><h3><i class="fas fa-info-circle"></i> No Users Found</h3><p>No data matches your criteria.</p></td></tr>`;
                 } else {
-                    if (menuToggle) {
-                        menuToggle.style.display = 'block';
+                    userTableBody.innerHTML = users.map(user => {
+                        const avatar = user.username ? user.username.charAt(0).toUpperCase() : 'U';
+                        const roleClass = user.role == 'admin' ? 'role-admin' : 'role-user'; // Edit here
+                        const roleName = user.role == 'admin' ? 'Admin' : 'User'; // And here
+                        return `
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">${avatar}</div>
+                                    <div>
+                                        <div class="user-name">${user.username || 'N/A'}</div>
+                                        <div class="user-id">ID: ${user.userId}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="contact-cell">
+                                    <div class="user-email"><i class="fas fa-envelope"></i> ${user.email}</div>
+                                    <div class="user-phone"><i class="fas fa-phone"></i> ${user.phoneNumber || 'No Phone Number'}</div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge ${roleClass}">${roleName}</span></td>
+                            <td>
+                                <button class="btn btn-delete" data-id="${user.userId}" title="Delete user">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    }).join('');
+                }
+                updateStats(); // Update the stats again
+            };
+
+            const updateStats = () => {
+                const total = allUsersData.length;
+                const admins = allUsersData.filter(u => u.role == 'admin').length; // Edit here
+                totalUsersEl.textContent = total;
+                adminCountEl.textContent = admins;
+                userCountEl.textContent = total - admins;
+                filteredCountEl.textContent = filteredUsersData.length;
+            };
+
+            const filterUsers = () => {
+                const keyword = searchInput.value.trim().toLowerCase();
+                clearSearchButton.style.display = keyword ? 'flex' : 'none';
+                const filtered = allUsersData.filter(user =>
+                    (user.username || '').toLowerCase().includes(keyword) ||
+                    (user.email || '').toLowerCase().includes(keyword)
+                );
+                renderUsers(filtered);
+            };
+
+            const handleDeleteUser = async (userId) => {
+                const user = allUsersData.find(u => u.userId == userId);
+                const userName = user ? user.username || user.email : `ID ${userId}`;
+                if (confirm(`Are you sure you want to delete the user "${userName}"?`)) {
+                    const token = localStorage.getItem('jwtToken');
+                    showLoading(true);
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+                            method: 'DELETE',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (!response.ok) throw new Error('Delete operation failed.');
+                        showMessage('success', 'User deleted successfully!');
+                        await fetchUsers(token); // Reload data
+                    } catch (error) {
+                        console.error('Error deleting user:', error);
+                        showMessage('error', 'Could not delete user. Please try again.');
+                    } finally {
+                        showLoading(false);
                     }
                 }
+            };
+
+            const handleExportToExcel = () => {
+                if (filteredUsersData.length === 0) {
+                    showMessage('error', 'No data to export.');
+                    return;
+                }
+                const dataToExport = filteredUsersData.map(user => ({
+                    'ID': user.userId, 'Username': user.username, 'Email': user.email,
+                    'Phone': user.phoneNumber, 'Gender': user.gender, 'Role': user.role,
+                    'Date of Birth': user.dob
+                }));
+                const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+                XLSX.writeFile(workbook, `Users_Export_${new Date().toISOString().slice(0, 10)}.xlsx`);
+                showMessage('success', 'Data exported to Excel successfully!');
+            };
+
+            const handleLogout = () => {
+                localStorage.removeItem('jwtToken'); // Remove token
+                window.location.href = 'login.html'; // Redirect to login page
+            };
+
+            const showLoading = (isLoading) => { loadingDiv.style.display = isLoading ? 'flex' : 'none'; };
+
+            const showMessage = (type, message) => {
+                const element = type === 'success' ? successDiv : errorDiv;
+                element.textContent = message;
+                element.style.display = 'block';
+                setTimeout(() => { element.style.display = 'none'; }, 4000);
+            };
+
+            // === Initialization ===
+            const init = () => {
+                const token = localStorage.getItem('jwtToken');
+                if (!token) {
+                    showMessage('error', 'Token not found. Please login.');
+                    document.querySelector('.admin-container').innerHTML = '<h1><i class="fas fa-lock"></i> Access Denied</h1>';
+                    return;
+                }
+                try {
+                    const decodedToken = jwt_decode(token);
+                    if (decodedToken.exp * 1000 < Date.now()) {
+                        showMessage('error', 'Session has expired.');
+                        return;
+                    }
+                    if (decodedToken.role == 'ROLE_ADMIN') {
+                        fetchUsers(token);
+                    } else {
+                        showMessage('error', 'Admin rights required.');
+                        document.querySelector('.admin-container').innerHTML = '<h1><i class="fas fa-lock"></i> Access Denied</h1>';
+                    }
+                } catch (e) {
+                    showMessage('error', 'Invalid token.');
+                }
+            };
+
+            // === Event Listeners ===
+            userTableBody.addEventListener('click', (event) => {
+                const deleteButton = event.target.closest('.btn-delete');
+                if (deleteButton) {
+                    handleDeleteUser(deleteButton.dataset.id);
+                }
             });
+
+            refreshButton.addEventListener('click', () => {
+                searchInput.value = '';
+                init(); // Rerun init to get the latest token and fetch
+                showMessage('success', 'Data has been refreshed!');
+            });
+
+            exportButton.addEventListener('click', handleExportToExcel);
+            searchInput.addEventListener('input', filterUsers);
+            logoutButton.addEventListener('click', handleLogout);
+            clearSearchButton.addEventListener('click', () => {
+                searchInput.value = '';
+                filterUsers();
+            });
+
+            init();
         });
     </script>
 </body>
+
 </html>
